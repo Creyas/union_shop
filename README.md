@@ -180,7 +180,9 @@ The table below outlines the aspects that will be evaluated and the mark (from t
 | Testing | Tests covering all or almost all of the application; passing tests; evidence of TDD* | 6% |
 | External Services* | Integration and utilization of cloud services | 6% |
 
-Below are some explanation for the terminology used in the table:
+⚠️ **Code Quality Penalty:** Up to 10% may be deducted if your code has quality issues. Your code must be properly formatted and free from errors, warnings, or suggestions. Make sure your codebase is also well-structured, refactored and relatively free of repetition. Visit [worksheet 4](https://manighahrmani.github.io/sandwich_shop/worksheet-4.html) for more information.
+
+Below are some explanations for the terminology used in the table:
 
 ***README**: Refer to [worksheet 4](https://manighahrmani.github.io/sandwich_shop/worksheet-4.html#writing-a-readme) for guidance on writing a good README file.
 
@@ -192,7 +194,7 @@ Below are some explanation for the terminology used in the table:
 
 The demos take place during your usual timetabled practical sessions in weeks 19 or 20 (Friday 12/12/2025 or Friday 19/12/2025). More information about the demo sessions will be provided closer to the time.
 
-During the demo, you will have **up to 10 minutes** to demonstrate your application to a member of staff. You must clone your repository in the session and run the application live. You need to be prepared to show the features you have implemented and answer any questions about your code.
+During the demo, you will have **up to 10 minutes** to demonstrate your application to staff. You must clone your repository and run the application live. You need to be prepared to show the features you have implemented and answer any questions about your code.
 
 ⚠️ Make sure your application runs correctly (on your personal device or the university computers) from a fresh clone before attending the demo session.
 
