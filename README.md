@@ -27,8 +27,26 @@ Below is a quick guide for each option. For more information, you can refer to [
 **Firebase Studio:**
 
 - Access [idx.google.com](https://idx.google.com) with a personal Google account
-- Create a new workspace (template selection not needed for this coursework)
-- Clone your forked repository using the command palette
+- Create a new Flutter Workspace (choose the Flutter template in the "Start coding an app" section)
+- Once the Flutter Workspace is created, open the integrated terminal (View → Terminal) and link this project to your forked GitHub repository by running the following commands (replace `YOUR-USERNAME` in the URL):
+
+  ```bash
+  rm -rf .git && git init && git remote add origin https://github.com/YOUR-USERNAME/union_shop.git && git fetch origin && git reset --hard origin/main
+  ```
+
+  This command should remove the existing Git history, initialize a new Git repository, add your forked repository as the remote named `origin`, fetch the data from it, and reset the local files to match the `main` branch of your forked repository. After running the above commands, open the Source Control view in Visual Studio Code and commit any local changes. This will create a commit that points to your forked repository. In the terminal you can push the commit to GitHub with:
+
+  ```bash
+  git push -u origin main
+  ```
+
+  If you're unsure that you're connected to the correct repository, check the remote with:
+
+  ```bash
+  git remote -v
+  ```
+
+  This should show the URL of your forked repository (`https://github.com/YOUR-USERNAME/union_shop.git` where `YOUR-USERNAME` is your GitHub username).
 
 University Computers:
 
