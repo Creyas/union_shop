@@ -305,7 +305,7 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-class HeroCarousel extends StatelessWidget {
+class HeroCarousel extends StatefulWidget {
   final double height;
   final List<String> imageUrls;
   final VoidCallback onBrowse;
@@ -318,34 +318,73 @@ class HeroCarousel extends StatelessWidget {
   });
 
   @override
+  State<HeroCarousel> createState() => _HeroCarouselState();
+}
+
+class _HeroCarouselState extends State<HeroCarousel> {
+  late final PageController _pageController;
+  late Timer _timer;
+  int _current = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
+      if (!mounted) return;
+      final next = (_current + 1) % widget.imageUrls.length;
+      _pageController.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
+    return SizedBox(
+      height: widget.height,
       width: double.infinity,
       child: Stack(
         children: [
-          // Background image
+          // PageView for images
           Positioned.fill(
             child: PageView.builder(
-              itemCount: imageUrls.length,
+              controller: _pageController,
+              itemCount: widget.imageUrls.length,
+              onPageChanged: (index) => setState(() => _current = index),
               itemBuilder: (context, index) {
-                return Image.network(
-                  imageUrls[index],
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child:
-                            Icon(Icons.image_not_supported, color: Colors.grey),
-                      ),
-                    );
-                  },
+                final url = widget.imageUrls[index];
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(url, fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(Icons.image_not_supported,
+                              color: Colors.grey),
+                        ),
+                      );
+                    }),
+                    // dark overlay
+                    Container(color: Colors.black.withOpacity(0.5)),
+                  ],
                 );
               },
             ),
           ),
-          // Content overlay
+
+          // Content overlay (same content as before)
           Positioned(
             left: 24,
             right: 24,
@@ -374,7 +413,7 @@ class HeroCarousel extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(
-                  onPressed: onBrowse,
+                  onPressed: widget.onBrowse,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4d2963),
                     foregroundColor: Colors.white,
@@ -388,6 +427,29 @@ class HeroCarousel extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+
+          // Dots indicator
+          Positioned(
+            bottom: 16,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(widget.imageUrls.length, (i) {
+                final selected = i == _current;
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: selected ? 18 : 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: selected ? Colors.white : Colors.white54,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                );
+              }),
             ),
           ),
         ],
