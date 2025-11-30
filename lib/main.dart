@@ -462,43 +462,46 @@ class _HeroCarouselState extends State<HeroCarousel> {
             ),
           ),
 
-          // Pause/Play button (top-right)
-          Positioned(
-            top: 12,
-            right: 12,
-            child: Material(
-              color: Colors.black45,
-              shape: const CircleBorder(),
-              child: IconButton(
-                icon: Icon(_isPaused ? Icons.play_arrow : Icons.pause,
-                    color: Colors.white, size: 18),
-                onPressed: _togglePaused,
-                tooltip: _isPaused ? 'Resume' : 'Pause',
-                padding: const EdgeInsets.all(8),
-              ),
-            ),
-          ),
-
-          // Dots indicator
+          // Bottom bar: dots centered, pause/play on right
           Positioned(
             bottom: 16,
-            left: 0,
-            right: 0,
+            left: 24,
+            right: 24,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(widget.imageUrls.length, (i) {
-                final selected = i == _current;
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: selected ? 18 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: selected ? Colors.white : Colors.white54,
-                    borderRadius: BorderRadius.circular(4),
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(widget.imageUrls.length, (i) {
+                        final selected = i == _current;
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          width: selected ? 18 : 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: selected ? Colors.white : Colors.white54,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        );
+                      }),
+                    ),
                   ),
-                );
-              }),
+                ),
+                const SizedBox(width: 8),
+                Material(
+                  color: Colors.black45,
+                  shape: const CircleBorder(),
+                  child: IconButton(
+                    icon: Icon(_isPaused ? Icons.play_arrow : Icons.pause,
+                        color: Colors.white, size: 18),
+                    onPressed: _togglePaused,
+                    tooltip: _isPaused ? 'Resume' : 'Pause',
+                    padding: const EdgeInsets.all(8),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
