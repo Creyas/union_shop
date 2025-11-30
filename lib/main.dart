@@ -323,15 +323,14 @@ class HeroCarousel extends StatefulWidget {
 
 class _HeroCarouselState extends State<HeroCarousel> {
   late final PageController _pageController;
-  late Timer _timer;
+  Timer? _timer;
   int _current = 0;
+  bool _isPaused = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: 0);
+  void _startTimer() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 4), (_) {
-      if (!mounted) return;
+      if (!mounted || _isPaused) return;
       final next = (_current + 1) % widget.imageUrls.length;
       _pageController.animateToPage(
         next,
@@ -341,11 +340,34 @@ class _HeroCarouselState extends State<HeroCarousel> {
     });
   }
 
+  void _stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+    _startTimer();
+  }
+
   @override
   void dispose() {
-    _timer.cancel();
+    _stopTimer();
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _togglePaused() {
+    setState(() {
+      _isPaused = !_isPaused;
+      if (_isPaused) {
+        _stopTimer();
+      } else {
+        _startTimer();
+      }
+    });
   }
 
   @override
@@ -360,22 +382,32 @@ class _HeroCarouselState extends State<HeroCarousel> {
             child: PageView.builder(
               controller: _pageController,
               itemCount: widget.imageUrls.length,
-              onPageChanged: (index) => setState(() => _current = index),
+              onPageChanged: (index) {
+                setState(() => _current = index);
+                // restart timer after manual swipe if not paused
+                if (!_isPaused) {
+                  _stopTimer();
+                  _startTimer();
+                }
+              },
               itemBuilder: (context, index) {
                 final url = widget.imageUrls[index];
                 return Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.network(url, fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[300],
-                        child: const Center(
-                          child: Icon(Icons.image_not_supported,
-                              color: Colors.grey),
-                        ),
-                      );
-                    }),
+                    Image.network(
+                      url,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Center(
+                            child: Icon(Icons.image_not_supported,
+                                color: Colors.grey),
+                          ),
+                        );
+                      },
+                    ),
                     // dark overlay
                     Container(color: Colors.black.withOpacity(0.5)),
                   ],
@@ -427,6 +459,23 @@ class _HeroCarouselState extends State<HeroCarousel> {
                   ),
                 ),
               ],
+            ),
+          ),
+
+          // Pause/Play button (top-right)
+          Positioned(
+            top: 12,
+            right: 12,
+            child: Material(
+              color: Colors.black45,
+              shape: const CircleBorder(),
+              child: IconButton(
+                icon: Icon(_isPaused ? Icons.play_arrow : Icons.pause,
+                    color: Colors.white, size: 18),
+                onPressed: _togglePaused,
+                tooltip: _isPaused ? 'Resume' : 'Pause',
+                padding: const EdgeInsets.all(8),
+              ),
             ),
           ),
 
