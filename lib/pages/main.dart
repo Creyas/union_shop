@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:union_shop/product_page.dart';
+import 'product_page.dart';
 import 'dart:async';
 
 void main() {
