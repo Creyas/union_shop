@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/header_widget.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -7,32 +8,26 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About'),
+        title: const Text('About Us'),
         backgroundColor: const Color(0xFF4d2963),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(24.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'About Union Shop',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'Put your about content here. Include mission, contact details, opening hours, terms, links, or any static information you want to show on the About page.',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'You can replace these placeholders with real content or widgets (images, columns, cards, links).',
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
+      body: Column(
+        children: [
+          HeaderWidget(
+            compact: true,
+            onLogoTap: () => Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false),
+            // onAbout can be null here or navigate back to same page
+            onAbout: () => Navigator.pushNamed(context, '/about'),
           ),
-        ),
+          const Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(24.0),
+              child: SingleChildScrollView(
+                child: Text('Your about content here.'),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
