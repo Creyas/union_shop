@@ -15,7 +15,8 @@ class AboutPage extends StatelessWidget {
         children: [
           HeaderWidget(
             compact: true,
-            onLogoTap: () => Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false),
+            onLogoTap: () =>
+                Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false),
             // onAbout can be null here or navigate back to same page
             onAbout: () => Navigator.pushNamed(context, '/about'),
           ),
