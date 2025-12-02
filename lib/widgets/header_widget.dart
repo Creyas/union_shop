@@ -37,7 +37,8 @@ class HeaderWidget extends StatelessWidget {
         // main header row
         Container(
           color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: verticalPadding),
+          padding:
+              EdgeInsets.symmetric(horizontal: 20, vertical: verticalPadding),
           child: Row(
             children: [
               GestureDetector(
@@ -63,37 +64,44 @@ class HeaderWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.search, size: 18, color: Colors.grey),
+                    icon:
+                        const Icon(Icons.search, size: 18, color: Colors.grey),
                     padding: const EdgeInsets.all(8),
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    constraints:
+                        const BoxConstraints(minWidth: 32, minHeight: 32),
                     onPressed: () {},
                   ),
                   IconButton(
-                    icon: const Icon(Icons.person_outline, size: 18, color: Colors.grey),
+                    icon: const Icon(Icons.person_outline,
+                        size: 18, color: Colors.grey),
                     padding: const EdgeInsets.all(8),
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    constraints:
+                        const BoxConstraints(minWidth: 32, minHeight: 32),
                     onPressed: () {},
                   ),
-
                   TextButton(
                     onPressed: onAbout,
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       minimumSize: const Size(32, 32),
                     ),
-                    child: const Text('About', style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    child: const Text('About',
+                        style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ),
-
                   IconButton(
-                    icon: const Icon(Icons.shopping_bag_outlined, size: 18, color: Colors.grey),
+                    icon: const Icon(Icons.shopping_bag_outlined,
+                        size: 18, color: Colors.grey),
                     padding: const EdgeInsets.all(8),
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    constraints:
+                        const BoxConstraints(minWidth: 32, minHeight: 32),
                     onPressed: () {},
                   ),
                   IconButton(
                     icon: const Icon(Icons.menu, size: 18, color: Colors.grey),
                     padding: const EdgeInsets.all(8),
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    constraints:
+                        const BoxConstraints(minWidth: 32, minHeight: 32),
                     onPressed: () {},
                   ),
                 ],
