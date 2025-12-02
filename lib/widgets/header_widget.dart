@@ -79,7 +79,6 @@ class HeaderWidget extends StatelessWidget {
                         const BoxConstraints(minWidth: 32, minHeight: 32),
                     onPressed: () {},
                   ),
-
                   TextButton(
                     onPressed: onAbout,
                     style: TextButton.styleFrom(
@@ -90,7 +89,6 @@ class HeaderWidget extends StatelessWidget {
                     child: const Text('About',
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ),
-
                   IconButton(
                     icon: const Icon(Icons.shopping_bag_outlined,
                         size: 18, color: Colors.grey),
