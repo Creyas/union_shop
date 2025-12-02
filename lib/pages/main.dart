@@ -42,6 +42,10 @@ class HomeScreen extends StatelessWidget {
     Navigator.pushNamed(context, '/product');
   }
 
+  void navigateToAbout(BuildContext context) {
+    Navigator.pushNamed(context, '/about');
+  }
+
   void placeholderCallbackForButtons() {
     // This is the event handler for buttons that don't work yet
   }
@@ -127,6 +131,20 @@ class HomeScreen extends StatelessWidget {
                                     minHeight: 32,
                                   ),
                                   onPressed: placeholderCallbackForButtons,
+                                ),
+                                // Simple "About" text link instead of an icon
+                                TextButton(
+                                  onPressed: () => navigateToAbout(context),
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 8),
+                                    minimumSize: const Size(32, 32),
+                                  ),
+                                  child: const Text(
+                                    'About',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 14),
+                                  ),
                                 ),
                                 IconButton(
                                   icon: const Icon(
