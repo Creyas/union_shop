@@ -46,7 +46,7 @@ class HeaderWidget extends StatelessWidget {
                 child: SizedBox(
                   height: logoHeight,
                   child: Image.network(
-                    'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+                    'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
                     fit: BoxFit.contain,
                     errorBuilder: (_, __, ___) => Container(
                       width: 120,
@@ -79,6 +79,7 @@ class HeaderWidget extends StatelessWidget {
                         const BoxConstraints(minWidth: 32, minHeight: 32),
                     onPressed: () {},
                   ),
+
                   TextButton(
                     onPressed: onAbout,
                     style: TextButton.styleFrom(
@@ -89,6 +90,7 @@ class HeaderWidget extends StatelessWidget {
                     child: const Text('About',
                         style: TextStyle(color: Colors.grey, fontSize: 14)),
                   ),
+
                   IconButton(
                     icon: const Icon(Icons.shopping_bag_outlined,
                         size: 18, color: Colors.grey),
