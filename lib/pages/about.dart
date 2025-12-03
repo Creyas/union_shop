@@ -13,7 +13,7 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          HeaderWidget(compact: true, showBack: true),
+          const HeaderWidget(compact: true, showBack: true),
 
           // Title
           Padding(
