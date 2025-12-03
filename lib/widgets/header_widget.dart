@@ -108,12 +108,22 @@ class HeaderWidget extends StatelessWidget {
                     icon: const Icon(Icons.person_outline,
                         size: 18, color: Colors.grey),
                     padding: const EdgeInsets.all(8),
-                    constraints:
-                        const BoxConstraints(minWidth: 32, minHeight: 32),
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const AuthPage()),
-                      );
+                      // debug print to confirm the button was tapped
+                      // ignore: avoid_print
+                      print('Header: profile icon pressed');
+                      try {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const AuthPage()),
+                        );
+                      } catch (e, st) {
+                        // ignore: avoid_print
+                        print('Header: failed to push AuthPage: $e\n$st');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Unable to open login page: $e')),
+                        );
+                      }
                     },
                   ),
                   TextButton(
