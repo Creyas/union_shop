@@ -7,15 +7,36 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final double horizontalPadding =
+        MediaQuery.of(context).size.width > 900 ? 120.0 : 24.0;
+
+    return Scaffold(
       body: Column(
         children: [
           HeaderWidget(compact: true, showBack: true),
+
+          // Title
+          Padding(
+            padding: const EdgeInsets.only(top: 32.0, bottom: 8.0),
+            child: Center(
+              child: Text(
+                'About us',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.grey[800],
+                ),
+              ),
+            ),
+          ),
+
+          // Body content (preserves your original string)
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
               child: SingleChildScrollView(
-                child: Text("""Welcome to the Union Shop!
+                child: Text(
+                  """Welcome to the Union Shop!
 
 We’re dedicated to giving you the very best University branded products, with a range of clothing and merchandise available to shop all year round! We even offer an exclusive personalisation service!
 
@@ -25,11 +46,19 @@ We hope you enjoy our products as much as we enjoy offering them to you. If you 
 
 Happy shopping!
 
-The Union Shop & Reception Team​​​​​​​​​"""),
+The Union Shop & Reception Team​​​​​​​​​""",
+                  style: TextStyle(
+                    fontSize: 16,
+                    height: 1.8,
+                    color: Colors.grey[700],
+                  ),
+                  textAlign: TextAlign.left,
+                ),
               ),
             ),
           ),
-          FooterWidget(compact: true), // reuse footer here
+
+          const FooterWidget(compact: true),
         ],
       ),
     );
