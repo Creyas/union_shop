@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'search_overlay.dart';
+import '../pages/login_signup.dart';
 
 class HeaderWidget extends StatelessWidget {
   final bool compact;
@@ -110,8 +111,9 @@ class HeaderWidget extends StatelessWidget {
                     constraints:
                         const BoxConstraints(minWidth: 32, minHeight: 32),
                     onPressed: () {
-                      // navigate to the static login/signup page
-                      Navigator.pushNamed(context, '/auth');
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const AuthPage()),
+                      );
                     },
                   ),
                   TextButton(
