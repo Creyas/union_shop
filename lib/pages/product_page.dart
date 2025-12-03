@@ -23,6 +23,7 @@ class ProductPage extends StatelessWidget {
             // Header
             HeaderWidget(
               compact: true,
+              showBack: true, // <-- enable the back button
               onLogoTap: () => navigateToHome(context),
               onAbout: () => Navigator.pushNamed(context, '/about'),
             ),
