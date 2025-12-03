@@ -121,10 +121,11 @@ class _SearchPanelState extends State<_SearchPanel>
                                 suffixIcon: IconButton(
                                   icon: const Icon(Icons.close),
                                   onPressed: () {
-                                    if (_ctrl.text.isEmpty)
+                                    if (_ctrl.text.isEmpty) {
                                       widget.onClose();
-                                    else
+                                    } else {
                                       _ctrl.clear();
+                                    }
                                   },
                                 ),
                                 border: OutlineInputBorder(
