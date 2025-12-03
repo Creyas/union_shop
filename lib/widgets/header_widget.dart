@@ -4,12 +4,16 @@ class HeaderWidget extends StatelessWidget {
   final bool compact;
   final VoidCallback? onAbout;
   final VoidCallback? onLogoTap;
+  final bool showBack;
+  final VoidCallback? onBack;
 
   const HeaderWidget({
     super.key,
     this.compact = false,
     this.onAbout,
     this.onLogoTap,
+    this.showBack = false,
+    this.onBack,
   });
 
   @override
@@ -45,6 +49,19 @@ class HeaderWidget extends StatelessWidget {
               EdgeInsets.symmetric(horizontal: 20, vertical: verticalPadding),
           child: Row(
             children: [
+              // optional back button (left of the logo)
+              if (showBack)
+                IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.grey),
+                  padding: const EdgeInsets.all(8),
+                  constraints:
+                      const BoxConstraints(minWidth: 40, minHeight: 40),
+                  onPressed: onBack ??
+                      () {
+                        // default behavior: pop if possible
+                        if (Navigator.canPop(context)) Navigator.pop(context);
+                      },
+                ),
               GestureDetector(
                 onTap: onLogoTap,
                 child: SizedBox(
