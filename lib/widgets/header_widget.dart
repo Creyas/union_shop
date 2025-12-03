@@ -109,17 +109,22 @@ class HeaderWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     constraints:
                         const BoxConstraints(minWidth: 32, minHeight: 32),
-                    onPressed: () {},
+                    onPressed: () {
+                      // navigate to the static login/signup page
+                      Navigator.pushNamed(context, '/auth');
+                    },
                   ),
                   TextButton(
-                    onPressed: onAbout,
+                    onPressed: () => Navigator.pushNamed(context, '/about'),
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
                       minimumSize: const Size(32, 32),
                     ),
-                    child: const Text('About',
-                        style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    child: const Text(
+                      'About',
+                      style: TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.shopping_bag_outlined,

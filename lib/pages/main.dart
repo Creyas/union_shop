@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'product_page.dart';
 import 'about.dart';
+import 'login_signup.dart'; // add this import to register the auth route
 import 'dart:async';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
@@ -26,8 +27,11 @@ class UnionShopApp extends StatelessWidget {
       // When navigating to '/product', build and return the ProductPage
       // In your browser, try this link: http://localhost:49856/#/product
       routes: {
+        '/': (context) => const HomeScreen(),
         '/product': (context) => const ProductPage(),
         '/about': (context) => const AboutPage(),
+        '/auth': (context) =>
+            const AuthPage(), // route to your static login/signup
       },
     );
   }
