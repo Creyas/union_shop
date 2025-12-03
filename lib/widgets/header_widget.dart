@@ -28,8 +28,8 @@ class HeaderWidget extends StatelessWidget {
           color: const Color(0xFF4d2963),
           child: const Center(
             child: Text(
-              'PLACEHOLDER HEADER TEXT',
-              style: TextStyle(color: Colors.white, fontSize: 12),
+              'BIG SALE! OUR ESSENTIAL RANGE HAS DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
           ),
         ),
