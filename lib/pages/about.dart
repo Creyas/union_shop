@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
+import '../widgets/footer_widget.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -11,16 +12,10 @@ class AboutPage extends StatelessWidget {
         title: const Text('About Us'),
         backgroundColor: const Color(0xFF4d2963),
       ),
-      body: Column(
+      body: const Column(
         children: [
-          HeaderWidget(
-            compact: true,
-            onLogoTap: () =>
-                Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false),
-            // onAbout can be null here or navigate back to same page
-            onAbout: () => Navigator.pushNamed(context, '/about'),
-          ),
-          const Expanded(
+          HeaderWidget(compact: true),
+          Expanded(
             child: Padding(
               padding: EdgeInsets.all(24.0),
               child: SingleChildScrollView(
@@ -28,6 +23,7 @@ class AboutPage extends StatelessWidget {
               ),
             ),
           ),
+          FooterWidget(compact: true), // reuse footer here
         ],
       ),
     );
