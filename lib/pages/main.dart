@@ -269,42 +269,72 @@ class _HeroCarouselState extends State<HeroCarousel> {
       width: double.infinity,
       child: Stack(
         children: [
-          // PageView for images
+          // PageView for images (wrapped so horizontal drags are forwarded)
           Positioned.fill(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: widget.imageUrls.length,
-              onPageChanged: (index) {
-                setState(() => _current = index);
-                // restart timer after manual swipe if not paused
-                if (!_isPaused) {
-                  _stopTimer();
-                  _startTimer();
-                }
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              // forward horizontal drag to PageController so dragging works inside
+              // the outer vertical scroll view and overlaid widgets
+              onHorizontalDragUpdate: (details) {
+                _pageController
+                    .jumpTo(_pageController.offset - details.delta.dx);
               },
-              itemBuilder: (context, index) {
-                final url = widget.imageUrls[index];
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      url,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Icon(Icons.image_not_supported,
-                                color: Colors.grey),
-                          ),
-                        );
-                      },
-                    ),
-                    // dark overlay
-                    Container(color: Colors.black.withOpacity(0.5)),
-                  ],
+              onHorizontalDragEnd: (details) {
+                // snap to the nearest page, with a velocity-based bias
+                final double page = _pageController.page ??
+                    _pageController.initialPage.toDouble();
+                int target = page.round();
+                final v = details.primaryVelocity ?? 0.0;
+                if (v.abs() > 300) {
+                  target = v < 0 ? (page + 1).toInt() : (page - 1).toInt();
+                }
+                target = target.clamp(0, widget.imageUrls.length - 1);
+                _pageController.animateToPage(
+                  target,
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOut,
                 );
               },
+              child: PageView.builder(
+                controller: _pageController,
+                physics: const PageScrollPhysics(),
+                itemCount: widget.imageUrls.length,
+                onPageChanged: (index) {
+                  setState(() => _current = index);
+                  if (!_isPaused) {
+                    _stopTimer();
+                    _startTimer();
+                  }
+                },
+                itemBuilder: (context, index) {
+                  final url = widget.imageUrls[index];
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(
+                        url,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(Icons.image_not_supported,
+                                  color: Colors.grey),
+                            ),
+                          );
+                        },
+                      ),
+                      const IgnorePointer(
+                        ignoring: true,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(0, 0, 0, 0.5)),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
 
