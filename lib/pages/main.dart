@@ -21,11 +21,9 @@ class UnionShopApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
       ),
-      home: const HomeScreen(),
-      // By default, the app starts at the '/' route, which is the HomeScreen
-      initialRoute: '/',
-      // When navigating to '/product', build and return the ProductPage
-      // In your browser, try this link: http://localhost:49856/#/product
+      // Use routes to declare the '/' route — do NOT keep `home` when you have '/'
+      // (remove or comment out `home:` to avoid the assertion)
+      // initialRoute: '/', // optional, default is '/'
       routes: {
         '/': (context) => const HomeScreen(),
         '/product': (context) => const ProductPage(),
