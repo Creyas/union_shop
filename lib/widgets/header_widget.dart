@@ -29,7 +29,11 @@ class HeaderWidget extends StatelessWidget {
           child: const Center(
             child: Text(
               'BIG SALE! OUR ESSENTIAL RANGE HAS DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
-              style: TextStyle(color: Colors.white, fontSize: 18),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold, // ← make text bold
+              ),
             ),
           ),
         ),
