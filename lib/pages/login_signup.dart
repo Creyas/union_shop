@@ -53,14 +53,14 @@ class _AuthPageState extends State<AuthPage> {
               if (Navigator.canPop(context)) Navigator.pop(context);
             },
           ),
+
           Expanded(
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: maxWidth),
                 child: Card(
                   elevation: 4,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Form(
@@ -70,49 +70,44 @@ class _AuthPageState extends State<AuthPage> {
                         children: [
                           Text(
                             _isSignUp ? 'Create an account' : 'Sign in',
-                            style: const TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 12),
+
                           if (_isSignUp)
                             TextFormField(
                               controller: _nameCtrl,
-                              decoration:
-                                  const InputDecoration(labelText: 'Full name'),
+                              decoration: const InputDecoration(labelText: 'Full name'),
                               validator: (v) {
-                                if (v == null || v.trim().isEmpty) {
-                                  return 'Enter your name';
-                                }
+                                if (v == null || v.trim().isEmpty) return 'Enter your name';
                                 return null;
                               },
                             ),
+
                           if (_isSignUp) const SizedBox(height: 8),
+
                           TextFormField(
                             controller: _emailCtrl,
-                            decoration:
-                                const InputDecoration(labelText: 'Email'),
+                            decoration: const InputDecoration(labelText: 'Email'),
                             keyboardType: TextInputType.emailAddress,
                             validator: (v) {
-                              if (v == null || !v.contains('@')) {
-                                return 'Enter a valid email';
-                              }
+                              if (v == null || !v.contains('@')) return 'Enter a valid email';
                               return null;
                             },
                           ),
                           const SizedBox(height: 8),
+
                           TextFormField(
                             controller: _passCtrl,
-                            decoration:
-                                const InputDecoration(labelText: 'Password'),
+                            decoration: const InputDecoration(labelText: 'Password'),
                             obscureText: true,
                             validator: (v) {
-                              if (v == null || v.length < 6) {
-                                return 'Minimum 6 characters';
-                              }
+                              if (v == null || v.length < 6) return 'Minimum 6 characters';
                               return null;
                             },
                           ),
                           const SizedBox(height: 16),
+
                           if (_loading)
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 8),
@@ -123,18 +118,16 @@ class _AuthPageState extends State<AuthPage> {
                               width: double.infinity,
                               child: ElevatedButton(
                                 onPressed: _submit,
-                                child: Text(
-                                    _isSignUp ? 'Create account' : 'Sign in'),
+                                child: Text(_isSignUp ? 'Create account' : 'Sign in'),
                               ),
                             ),
+
                           const SizedBox(height: 8),
                           TextButton(
                             onPressed: () => setState(() {
                               _isSignUp = !_isSignUp;
                             }),
-                            child: Text(_isSignUp
-                                ? 'Have an account? Sign in'
-                                : 'Create an account'),
+                            child: Text(_isSignUp ? 'Have an account? Sign in' : 'Create an account'),
                           ),
                         ],
                       ),
@@ -144,6 +137,7 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ),
           ),
+
           const FooterWidget(compact: true),
         ],
       ),
