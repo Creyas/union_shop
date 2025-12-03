@@ -71,9 +71,9 @@ class HomeScreen extends StatelessWidget {
             HeroCarousel(
               height: 400,
               imageUrls: const [
-                'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
-                'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
+                'assets/images/hero1.jpg',
+                'assets/images/hero2.jpg',
+                'assets/images/hero3.jpg',
               ],
               onBrowse: placeholderCallbackForButtons,
             ),
@@ -86,11 +86,12 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const Text(
-                      'PRODUCTS SECTION',
+                      'SIGNATURE RANGE',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
                         letterSpacing: 1,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 48),
@@ -313,19 +314,25 @@ class _HeroCarouselState extends State<HeroCarousel> {
                   return Stack(
                     fit: StackFit.expand,
                     children: [
-                      Image.network(
-                        url,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: Icon(Icons.image_not_supported,
-                                  color: Colors.grey),
+                      // choose asset for local images, network otherwise
+                      url.startsWith('http')
+                          ? Image.network(
+                              url,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                    child: Icon(Icons.image_not_supported,
+                                        color: Colors.grey),
+                                  ),
+                                );
+                              },
+                            )
+                          : Image.asset(
+                              url,
+                              fit: BoxFit.cover,
                             ),
-                          );
-                        },
-                      ),
                       const IgnorePointer(
                         ignoring: true,
                         child: DecoratedBox(
