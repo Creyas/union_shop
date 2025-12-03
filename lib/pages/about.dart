@@ -10,7 +10,7 @@ class AboutPage extends StatelessWidget {
     return const Scaffold(
       body: Column(
         children: [
-          HeaderWidget(compact: true),
+          HeaderWidget(compact: true, showBack: true),
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(24.0),
