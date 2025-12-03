@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'search_overlay.dart';
 
 class HeaderWidget extends StatelessWidget {
   final bool compact;
@@ -90,7 +91,17 @@ class HeaderWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     constraints:
                         const BoxConstraints(minWidth: 32, minHeight: 32),
-                    onPressed: () {},
+                    onPressed: () {
+                      SearchOverlay.show(
+                        context,
+                        onSelect: (query) {
+                          // Example: send to product page with query as argument.
+                          // Update your '/product' route to accept arguments or handle as you prefer.
+                          Navigator.pushNamed(context, '/product',
+                              arguments: {'query': query});
+                        },
+                      );
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.person_outline,
