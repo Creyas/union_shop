@@ -56,7 +56,7 @@ class _AuthPageState extends State<AuthPage> {
           Expanded(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: maxWidth),
+                constraints: const BoxConstraints(maxWidth: maxWidth),
                 child: Card(
                   elevation: 4,
                   margin:
@@ -80,8 +80,9 @@ class _AuthPageState extends State<AuthPage> {
                               decoration:
                                   const InputDecoration(labelText: 'Full name'),
                               validator: (v) {
-                                if (v == null || v.trim().isEmpty)
+                                if (v == null || v.trim().isEmpty) {
                                   return 'Enter your name';
+                                }
                                 return null;
                               },
                             ),
@@ -92,8 +93,9 @@ class _AuthPageState extends State<AuthPage> {
                                 const InputDecoration(labelText: 'Email'),
                             keyboardType: TextInputType.emailAddress,
                             validator: (v) {
-                              if (v == null || !v.contains('@'))
+                              if (v == null || !v.contains('@')) {
                                 return 'Enter a valid email';
+                              }
                               return null;
                             },
                           ),
@@ -104,8 +106,9 @@ class _AuthPageState extends State<AuthPage> {
                                 const InputDecoration(labelText: 'Password'),
                             obscureText: true,
                             validator: (v) {
-                              if (v == null || v.length < 6)
+                              if (v == null || v.length < 6) {
                                 return 'Minimum 6 characters';
+                              }
                               return null;
                             },
                           ),
