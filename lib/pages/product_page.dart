@@ -30,17 +30,21 @@ class _ProductPageState extends State<ProductPage> {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
-  void addToCart(BuildContext context) {
+  void addToCart(BuildContext context, String productId, String productTitle,
+      String productPrice, String productImage) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
+    // Parse the price string (remove £ symbol and convert to double)
+    final price = double.parse(productPrice.replaceAll('£', ''));
+
     final cartItem = CartItem(
-      id: 'classic-hoodie-${DateTime.now().millisecondsSinceEpoch}',
-      name: 'Classic Hoodies',
-      price: 25.00,
+      id: '$productId-${DateTime.now().millisecondsSinceEpoch}',
+      name: productTitle,
+      price: price,
       color: selectedColor,
       size: selectedSize,
       quantity: quantity,
-      imageUrl: 'assets/images/purple_hoodie.jpg',
+      imageUrl: productImage,
     );
 
     cartProvider.addItem(cartItem);
@@ -337,7 +341,8 @@ class _ProductPageState extends State<ProductPage> {
                     width: double.infinity,
                     height: 44,
                     child: ElevatedButton(
-                      onPressed: () => addToCart(context),
+                      onPressed: () => addToCart(context, productId,
+                          productTitle, productPrice, productImage),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
