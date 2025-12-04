@@ -172,7 +172,16 @@ class _ProductCardState extends State<ProductCard> {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(context, '/product');
+          Navigator.pushNamed(
+            context,
+            '/product',
+            arguments: {
+              'id': widget.id,
+              'title': widget.title,
+              'price': widget.price,
+              'imageUrl': widget.imageUrl,
+            },
+          );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
