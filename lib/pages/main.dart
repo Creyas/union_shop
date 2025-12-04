@@ -76,7 +76,7 @@ class HomeScreen extends StatelessWidget {
             HeroCarousel(
               height: 400,
               imageUrls: const [
-                'assets/images/hero1.jpg',
+                'assets/images/black_hoodie1.jpg',
                 'assets/images/hero2.jpg',
                 'assets/images/hero3.jpg',
               ],
@@ -109,28 +109,24 @@ class HomeScreen extends StatelessWidget {
                       mainAxisSpacing: 48,
                       children: const [
                         ProductCard(
-                          title: 'Placeholder Product 1',
-                          price: '£10.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                          title: 'Essential T-Shirt',
+                          price: '£6.99',
+                          imageUrl: 'assets/images/blue_tshirt.jpg',
                         ),
                         ProductCard(
-                          title: 'Placeholder Product 2',
-                          price: '£15.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 3',
-                          price: '£20.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 4',
+                          title: 'Classic Hoodie',
                           price: '£25.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+                          imageUrl: 'assets/images/purple_hoodie.jpg',
+                        ),
+                        ProductCard(
+                          title: 'Black Hoodie',
+                          price: '£25.00',
+                          imageUrl: 'assets/images/black_hoodie1.jpg',
+                        ),
+                        ProductCard(
+                          title: 'Premium T-Shirt',
+                          price: '£15.00',
+                          imageUrl: 'assets/images/blue_tshirt.jpg',
                         ),
                       ],
                     ),
@@ -170,7 +166,7 @@ class ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Image.network(
+            child: Image.asset(
               imageUrl,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
