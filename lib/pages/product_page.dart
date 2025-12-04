@@ -13,11 +13,17 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  String selectedColor = 'Purple';
-  String selectedSize = 'XS';
+  String selectedColor = 'Light Blue';
+  String selectedSize = 'M';
   int quantity = 1;
 
-  final List<String> colors = ['Purple', 'Grey', 'Black', 'Blue'];
+  final List<String> colors = [
+    'Light Blue',
+    'Forest Green',
+    'Purple',
+    'Grey',
+    'Black'
+  ];
   final List<String> sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
 
   void navigateToHome(BuildContext context) {
@@ -82,6 +88,49 @@ class _ProductPageState extends State<ProductPage> {
                           );
                         },
                       ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Thumbnail images
+                    Row(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey[300]!),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Image.asset(
+                            'assets/images/purple_hoodie.jpg',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(Icons.image, size: 30),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Colors.grey[800]!, width: 2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Image.asset(
+                            'assets/images/purple_hoodie.jpg',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(Icons.image, size: 30),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 24),
 
