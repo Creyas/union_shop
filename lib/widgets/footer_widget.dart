@@ -166,20 +166,6 @@ class FooterWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               content,
-              const SizedBox(height: 24),
-              Divider(color: Colors.grey.shade300),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('© ${DateTime.now().year} Union Shop',
-                      style: TextStyle(
-                          color: Colors.grey[700], fontSize: bodySize * 0.95)),
-                  Text('All rights reserved',
-                      style: TextStyle(
-                          color: Colors.grey[700], fontSize: bodySize * 0.95)),
-                ],
-              ),
             ],
           );
         },
