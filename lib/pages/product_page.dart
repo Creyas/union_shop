@@ -96,12 +96,26 @@ class _ProductPageState extends State<ProductPage> {
                     const SizedBox(height: 8),
 
                     // Price
-                    const Text(
-                      '£25.00',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          '£10.00',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey[600],
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          '£6.99',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 8),
 
