@@ -146,7 +146,9 @@ class HeaderWidget extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     constraints:
                         const BoxConstraints(minWidth: 32, minHeight: 32),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/cart');
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.menu, size: 18, color: Colors.grey),
