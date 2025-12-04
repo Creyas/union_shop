@@ -243,6 +243,47 @@ class _ProductPageState extends State<ProductPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
+
+                  // ADD TO CART button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () => addToCart(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4d2963),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      child: const Text(
+                        'ADD TO CART',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // More payment options text
+                  Center(
+                    child: TextButton(
+                      onPressed: placeholderCallbackForButtons,
+                      child: Text(
+                        'More payment options',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
