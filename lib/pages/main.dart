@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import 'product_page.dart';
 import 'about.dart';
-import 'login_signup.dart'; // add this import to register the auth route
+import 'login_signup.dart';
+import 'cart_page.dart';
 import 'dart:async';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
@@ -27,15 +28,12 @@ class UnionShopApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
         ),
-        // Use routes to declare the '/' route — do NOT keep `home` when you have '/'
-        // (remove or comment out `home:` to avoid the assertion)
-        // initialRoute: '/', // optional, default is '/'
         routes: {
           '/': (context) => const HomeScreen(),
           '/product': (context) => const ProductPage(),
           '/about': (context) => const AboutPage(),
-          '/auth': (context) =>
-              const AuthPage(), // route to your static login/signup
+          '/auth': (context) => const AuthPage(),
+          '/cart': (context) => const CartPage(),
         },
       ),
     );
