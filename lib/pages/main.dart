@@ -77,8 +77,8 @@ class HomeScreen extends StatelessWidget {
               height: 400,
               imageUrls: const [
                 'assets/images/black_hoodie1.jpg',
-                'assets/images/hero2.jpg',
-                'assets/images/hero3.jpg',
+                'assets/images/white_hoodie1.jpg',
+                'assets/images/white_shirt1.jpg',
               ],
               onBrowse: placeholderCallbackForButtons,
             ),
