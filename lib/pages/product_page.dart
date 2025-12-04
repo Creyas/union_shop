@@ -1,13 +1,50 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
+import '../providers/cart_provider.dart';
+import '../models/cart_item.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  String selectedColor = 'Purple';
+  String selectedSize = 'XS';
+  int quantity = 1;
+
+  final List<String> colors = ['Purple', 'Grey', 'Black', 'Blue'];
+  final List<String> sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
 
   void navigateToHome(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  }
+
+  void addToCart(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+    final cartItem = CartItem(
+      id: 'classic-hoodie-${DateTime.now().millisecondsSinceEpoch}',
+      name: 'Classic Hoodies',
+      price: 25.00,
+      color: selectedColor,
+      size: selectedSize,
+      quantity: quantity,
+      imageUrl: 'assets/images/purple_hoodie.jpg',
+    );
+
+    cartProvider.addItem(cartItem);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Added to cart!'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   void placeholderCallbackForButtons() {
