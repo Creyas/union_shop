@@ -85,28 +85,34 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Product name
+                  // Product title
                   const Text(
-                    'Placeholder Product Name',
+                    'Classic Hoodies',
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
                     ),
                   ),
+                  const SizedBox(height: 8),
 
-                  const SizedBox(height: 12),
-
-                  // Product price
+                  // Price
                   const Text(
-                    '£15.00',
+                    '£25.00',
                     style: TextStyle(
                       fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF4d2963),
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
+                  const SizedBox(height: 8),
 
+                  // Tax included text
+                  Text(
+                    'Tax included.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
                   const SizedBox(height: 24),
 
                   // Product description
