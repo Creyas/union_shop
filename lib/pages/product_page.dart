@@ -133,6 +133,116 @@ class _ProductPageState extends State<ProductPage> {
                       height: 1.5,
                     ),
                   ),
+                  const SizedBox(height: 24),
+
+                  // Color selector
+                  const Text(
+                    'Color: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedColor,
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      items: colors.map((String color) {
+                        return DropdownMenuItem<String>(
+                          value: color,
+                          child: Text(color),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedColor = newValue;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  // Size selector
+                  const Text(
+                    'Size: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedSize,
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      items: sizes.map((String size) {
+                        return DropdownMenuItem<String>(
+                          value: size,
+                          child: Text(size),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            selectedSize = newValue;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  // Quantity selector
+                  const Text(
+                    'Quantity: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: DropdownButton<String>(
+                      value: quantity.toString(),
+                      isExpanded: true,
+                      underline: const SizedBox(),
+                      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((int value) {
+                        return DropdownMenuItem<String>(
+                          value: value.toString(),
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            quantity = int.parse(newValue);
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
