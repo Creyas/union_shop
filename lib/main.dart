@@ -110,21 +110,25 @@ class HomeScreen extends StatelessWidget {
                       childAspectRatio: 2.5,
                       children: [
                         ProductCard(
+                          id: 'white-shirt',
                           title: 'Essential T-Shirt',
                           price: '£6.99',
                           imageUrl: 'assets/images/white_shirt1.jpg',
                         ),
                         ProductCard(
+                          id: 'white-hoodie',
                           title: 'Classic Hoodie',
                           price: '£25.00',
                           imageUrl: 'assets/images/white_hoodie1.jpg',
                         ),
                         ProductCard(
+                          id: 'black-hoodie',
                           title: 'Black Hoodie',
                           price: '£25.00',
                           imageUrl: 'assets/images/black_hoodie1.jpg',
                         ),
                         ProductCard(
+                          id: 'black-shirt',
                           title: 'Black T-Shirt',
                           price: '£15.00',
                           imageUrl: 'assets/images/black_shirt1.jpg',
@@ -146,12 +150,14 @@ class HomeScreen extends StatelessWidget {
 }
 
 class ProductCard extends StatefulWidget {
+  final String id;
   final String title;
   final String price;
   final String imageUrl;
 
   const ProductCard({
     super.key,
+    required this.id,
     required this.title,
     required this.price,
     required this.imageUrl,
