@@ -5,6 +5,7 @@ import 'pages/product_page.dart';
 import 'pages/about.dart';
 import 'pages/login_signup.dart';
 import 'pages/cart_page.dart';
+import 'pages/collections.dart';
 import 'dart:async';
 import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
@@ -34,6 +35,8 @@ class UnionShopApp extends StatelessWidget {
           '/about': (context) => const AboutPage(),
           '/auth': (context) => const AuthPage(),
           '/cart': (context) => const CartPage(),
+          '/collections': (context) =>
+              const CollectionsPage(), // Add route for CollectionsPage
         },
       ),
     );
