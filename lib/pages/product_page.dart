@@ -190,12 +190,13 @@ class _ProductPageState extends State<ProductPage> {
                               const Text(
                                 'Color',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 6),
                               Container(
+                                height: 40,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
@@ -206,6 +207,8 @@ class _ProductPageState extends State<ProductPage> {
                                   value: selectedColor,
                                   isExpanded: true,
                                   underline: const SizedBox(),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.black),
                                   items: colors.map((String color) {
                                     return DropdownMenuItem<String>(
                                       value: color,
@@ -224,7 +227,7 @@ class _ProductPageState extends State<ProductPage> {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         // Size selector
                         Expanded(
                           child: Column(
@@ -233,12 +236,13 @@ class _ProductPageState extends State<ProductPage> {
                               const Text(
                                 'Size',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 6),
                               Container(
+                                height: 40,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
@@ -249,6 +253,8 @@ class _ProductPageState extends State<ProductPage> {
                                   value: selectedSize,
                                   isExpanded: true,
                                   underline: const SizedBox(),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.black),
                                   items: sizes.map((String size) {
                                     return DropdownMenuItem<String>(
                                       value: size,
@@ -267,7 +273,7 @@ class _ProductPageState extends State<ProductPage> {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         // Quantity selector
                         Expanded(
                           child: Column(
@@ -276,12 +282,13 @@ class _ProductPageState extends State<ProductPage> {
                               const Text(
                                 'Quantity',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 6),
                               Container(
+                                height: 40,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 12),
                                 decoration: BoxDecoration(
@@ -292,6 +299,8 @@ class _ProductPageState extends State<ProductPage> {
                                   value: quantity.toString(),
                                   isExpanded: true,
                                   underline: const SizedBox(),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.black),
                                   items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                                       .map((int value) {
                                     return DropdownMenuItem<String>(
@@ -313,12 +322,12 @@ class _ProductPageState extends State<ProductPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
                     // ADD TO CART button
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
+                      height: 44,
                       child: ElevatedButton(
                         onPressed: () => addToCart(context),
                         style: ElevatedButton.styleFrom(
@@ -332,14 +341,14 @@ class _ProductPageState extends State<ProductPage> {
                         child: const Text(
                           'ADD TO CART',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 0.5,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
                     // Product description moved here
                     const Text(
