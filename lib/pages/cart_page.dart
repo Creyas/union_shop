@@ -11,32 +11,44 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text('Shopping Cart'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const HeaderWidget(),
-            Container(
-              padding: const EdgeInsets.all(24),
-              child: Consumer<CartProvider>(
-                builder: (context, cart, child) {
-                  if (cart.items.isEmpty) {
-                    return _buildEmptyCart(context);
-                  }
-                  return _buildCartItems(context, cart);
-                },
+      body: Column(
+        children: [
+          const HeaderWidget(compact: true, showBack: true),
+
+          // Title
+          Padding(
+            padding: const EdgeInsets.only(top: 32.0, bottom: 24.0),
+            child: Center(
+              child: Text(
+                'Shopping Cart',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.grey[800],
+                ),
               ),
             ),
-            const FooterWidget(),
-          ],
-        ),
+          ),
+
+          // Cart content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                child: Consumer<CartProvider>(
+                  builder: (context, cart, child) {
+                    if (cart.items.isEmpty) {
+                      return _buildEmptyCart(context);
+                    }
+                    return _buildCartItems(context, cart);
+                  },
+                ),
+              ),
+            ),
+          ),
+
+          const FooterWidget(compact: true),
+        ],
       ),
     );
   }
