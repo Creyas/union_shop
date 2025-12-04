@@ -97,11 +97,19 @@ class CartPage extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
-          Image.network(
-            item.image,
+          Image.asset(
+            item.imageUrl ?? 'assets/images/purple_hoodie.jpg',
             height: 80,
             width: 80,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                height: 80,
+                width: 80,
+                color: Colors.grey[200],
+                child: const Icon(Icons.image),
+              );
+            },
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -111,27 +119,19 @@ class CartPage extends StatelessWidget {
                 Text(
                   item.name,
                   style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  item.description,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  'Price: ${item.price}',
-                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Quantity: ${item.quantity}',
+                  '${item.color} - ${item.size}',
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+                Text(
+                  '£${item.price.toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -139,13 +139,10 @@ class CartPage extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           ElevatedButton(
-            onPressed: () {
-              cart.remove(item);
-            },
+            onPressed: () => cart.removeItem(item.id),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4d2963),
+              backgroundColor: Colors.red,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
             child: const Text('Remove'),
           ),
