@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_provider.dart';
 import 'product_page.dart';
 import 'about.dart';
 import 'login_signup.dart'; // add this import to register the auth route
@@ -15,22 +17,27 @@ class UnionShopApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Union Shop',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Union Shop',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
+        ),
+        // Use routes to declare the '/' route — do NOT keep `home` when you have '/'
+        // (remove or comment out `home:` to avoid the assertion)
+        // initialRoute: '/', // optional, default is '/'
+        routes: {
+          '/': (context) => const HomeScreen(),
+          '/product': (context) => const ProductPage(),
+          '/about': (context) => const AboutPage(),
+          '/auth': (context) =>
+              const AuthPage(), // route to your static login/signup
+        },
       ),
-      // Use routes to declare the '/' route — do NOT keep `home` when you have '/'
-      // (remove or comment out `home:` to avoid the assertion)
-      // initialRoute: '/', // optional, default is '/'
-      routes: {
-        '/': (context) => const HomeScreen(),
-        '/product': (context) => const ProductPage(),
-        '/about': (context) => const AboutPage(),
-        '/auth': (context) =>
-            const AuthPage(), // route to your static login/signup
-      },
     );
   }
 }
