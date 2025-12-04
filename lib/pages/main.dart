@@ -111,12 +111,12 @@ class HomeScreen extends StatelessWidget {
                         ProductCard(
                           title: 'Essential T-Shirt',
                           price: '£6.99',
-                          imageUrl: 'assets/images/blue_tshirt.jpg',
+                          imageUrl: 'assets/images/white_shirt1.jpg',
                         ),
                         ProductCard(
                           title: 'Classic Hoodie',
                           price: '£25.00',
-                          imageUrl: 'assets/images/purple_hoodie.jpg',
+                          imageUrl: 'assets/images/white_hoodie1.jpg',
                         ),
                         ProductCard(
                           title: 'Black Hoodie',
@@ -124,9 +124,9 @@ class HomeScreen extends StatelessWidget {
                           imageUrl: 'assets/images/black_hoodie1.jpg',
                         ),
                         ProductCard(
-                          title: 'Premium T-Shirt',
+                          title: 'Black T-Shirt',
                           price: '£15.00',
-                          imageUrl: 'assets/images/blue_tshirt.jpg',
+                          imageUrl: 'assets/images/black_shirt1.jpg',
                         ),
                       ],
                     ),
