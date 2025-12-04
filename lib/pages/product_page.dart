@@ -87,7 +87,7 @@ class _ProductPageState extends State<ProductPage> {
 
                     // Product title
                     const Text(
-                      'Classic Hoodies',
+                      'Essential T-Shirt',
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -125,26 +125,6 @@ class _ProductPageState extends State<ProductPage> {
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Product description
-                    const Text(
-                      'Description',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'This is a placeholder description for the product. Students should replace this with real product information and implement proper data management.',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                        height: 1.5,
                       ),
                     ),
                     const SizedBox(height: 24),
