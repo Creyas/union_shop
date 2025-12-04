@@ -293,8 +293,9 @@ class _ProductPageState extends State<ProductPage> {
                       child: ElevatedButton(
                         onPressed: () => addToCart(context),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4d2963),
-                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          side: const BorderSide(color: Colors.black, width: 1),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4),
                           ),
@@ -304,25 +305,20 @@ class _ProductPageState extends State<ProductPage> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            letterSpacing: 1.2,
+                            letterSpacing: 0.5,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 24),
 
-                    // More payment options text
-                    Center(
-                      child: TextButton(
-                        onPressed: placeholderCallbackForButtons,
-                        child: Text(
-                          'More payment options',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
+                    // Product description moved here
+                    const Text(
+                      'Redesigned with a fresh chest logo, our Essential T-shirts are made for everyday wear with a modern twist. Soft, durable, and effortlessly versatile — these are the elevated basics your wardrobe\'s been waiting for.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
+                        height: 1.6,
                       ),
                     ),
                     const SizedBox(height: 24),
