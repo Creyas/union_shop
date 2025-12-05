@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
 import 'pages/product_page.dart';
 import 'pages/about.dart';
-import 'pages/login_signup.dart';
+import 'pages/login_signup.dart'; // This is correct
 import 'pages/cart_page.dart';
 import 'pages/collections.dart';
 import 'pages/collection_detail.dart';
@@ -14,6 +14,7 @@ import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
 import 'data/products_data.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'pages/profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,9 +26,7 @@ void main() async {
     print('Firebase initialization error: $e');
   }
 
-  // Remove testDatabase() - it doesn't exist
-
-  runApp(const UnionShopApp()); // Changed from MyApp to UnionShopApp
+  runApp(const UnionShopApp());
 }
 
 class UnionShopApp extends StatelessWidget {
@@ -49,12 +48,13 @@ class UnionShopApp extends StatelessWidget {
           '/': (context) => const HomePage(),
           '/product': (context) => const ProductPage(),
           '/about': (context) => const AboutPage(),
-          '/auth': (context) => const AuthPage(),
+          '/auth': (context) => const LoginSignupPage(), // Changed to match your file
           '/cart': (context) => const CartPage(),
           '/collections': (context) => const CollectionsPage(),
           '/collection-detail': (context) => const CollectionDetailPage(),
           '/all-products': (context) => const AllProductsPage(),
           '/print-shack': (context) => const PrintShackPage(),
+          '/profile': (context) => const ProfilePage(),
         },
       ),
     );
@@ -539,8 +539,7 @@ class ProductCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
