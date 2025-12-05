@@ -208,7 +208,8 @@ class CollectionsPage extends StatelessWidget {
   // Helper methods to filter products
   static List<Product> getClothesProducts() {
     return ProductsData.allProducts
-        .where((p) => ['white-shirt', 'white-hoodie', 'print-shack'].contains(p.id))
+        .where((p) =>
+            ['white-shirt', 'white-hoodie', 'print-shack'].contains(p.id))
         .toList();
   }
 
