@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'dart:async';
 import 'firebase_options.dart';
 import 'providers/cart_provider.dart';
 import 'pages/product_page.dart';
@@ -16,6 +15,7 @@ import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
 import 'widgets/product_card.dart';
 import 'widgets/mobile_drawer.dart';
+import 'widgets/hero_carousel.dart';
 import 'data/products_data.dart';
 import 'pages/profile_page.dart';
 
@@ -79,7 +79,6 @@ class _FirebaseInitializerState extends State<FirebaseInitializer> {
     return FutureBuilder(
       future: _initialization,
       builder: (context, snapshot) {
-        // Check for errors
         if (snapshot.hasError) {
           return Scaffold(
             body: Center(
@@ -106,13 +105,11 @@ class _FirebaseInitializerState extends State<FirebaseInitializer> {
           );
         }
 
-        // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           debugPrint('✅ Firebase initialized successfully');
           return const HomePage();
         }
 
-        // Otherwise, show loading indicator
         return const Scaffold(
           body: Center(
             child: Column(
@@ -138,43 +135,8 @@ class _FirebaseInitializerState extends State<FirebaseInitializer> {
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-      if (_currentPage < 2) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
-      if (_pageController.hasClients) {
-        _pageController.animateToPage(
-          _currentPage,
-          duration: const Duration(milliseconds: 350),
-          curve: Curves.easeIn,
-        );
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _pageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,22 +150,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   // Hero Carousel
-                  SizedBox(
-                    height: 400,
-                    child: PageView(
-                      controller: _pageController,
-                      onPageChanged: (int page) {
-                        setState(() {
-                          _currentPage = page;
-                        });
-                      },
-                      children: [
-                        _buildCarouselItem('images/carousel1.jpg'),
-                        _buildCarouselItem('images/carousel2.jpg'),
-                        _buildCarouselItem('images/carousel3.jpg'),
-                      ],
-                    ),
-                  ),
+                  const HeroCarousel(),
 
                   // Featured Products
                   Padding(
@@ -253,18 +200,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCarouselItem(String imagePath) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
       ),
     );
   }
