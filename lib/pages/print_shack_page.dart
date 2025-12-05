@@ -294,3 +294,70 @@ class _PrintShackPageState extends State<PrintShackPage> {
         ),
         const SizedBox(height: 24),
 
+        // Size Selection
+        const Text(
+          'Size',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) {
+            return ChoiceChip(
+              label: Text(size),
+              selected: selectedSize == size,
+              onSelected: (selected) {
+                setState(() {
+                  selectedSize = size;
+                });
+              },
+              selectedColor: const Color(0xFF4d2963),
+              labelStyle: TextStyle(
+                color: selectedSize == size ? Colors.white : Colors.black,
+              ),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 24),
+
+        // Per Line Selection
+        const Text(
+          'Per Line: Number of Lines',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DropdownButton<String>(
+            value: selectedLineOption,
+            isExpanded: true,
+            underline: const SizedBox(),
+            items: [
+              'One Line of Text',
+              'Two Lines of Text',
+              'Three Lines of Text'
+            ].map((option) {
+              return DropdownMenuItem(
+                value: option,
+                child: Text(option),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedLineOption = value!;
+              });
+            },
+          ),
+        ),
+        const SizedBox(height: 24),
+
