@@ -201,7 +201,8 @@ class MobileDrawer extends StatelessWidget {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.local_fire_department, color: Colors.red),
+                    leading: const Icon(Icons.local_fire_department,
+                        color: Colors.red),
                     title: const Text('Freshers Sale'),
                     onTap: () {
                       Navigator.pop(context);
