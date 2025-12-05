@@ -97,10 +97,10 @@ class HomeScreen extends StatelessWidget {
 
                         if (constraints.maxWidth > 900) {
                           crossAxisCount = 2;
-                          childAspectRatio = 0.75;
+                          childAspectRatio = 1.0;
                         } else if (constraints.maxWidth > 600) {
                           crossAxisCount = 2;
-                          childAspectRatio = 0.7;
+                          childAspectRatio = 0.85;
                         } else {
                           crossAxisCount = 1;
                           childAspectRatio = 0.75;
@@ -110,8 +110,8 @@ class HomeScreen extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 24,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20,
                           childAspectRatio: childAspectRatio,
                           children: [
                             ProductCard(
