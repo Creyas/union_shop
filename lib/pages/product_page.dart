@@ -5,6 +5,7 @@ import '../models/cart_item.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
+import '../widgets/mobile_drawer.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -71,6 +72,7 @@ class _ProductPageState extends State<ProductPage> {
     final currentImage = getCurrentImage(product);
 
     return Scaffold(
+      endDrawer: const MobileDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
