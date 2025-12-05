@@ -114,163 +114,135 @@ class FooterWidget extends StatelessWidget {
             fontSize: 12,
           ),
         ),
-        const SizedBox(height: 16),
-
-        // Copyright
-        Center(
-          child: Text(
-            '© 2024 University of Portsmouth Students\' Union',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 10,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
       ],
     );
   }
 
   Widget _buildDesktopFooter(BuildContext context, bool isTablet) {
-    return Column(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // About Section
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'The Union Shop',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+        // About Section
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'The Union Shop',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'University of Portsmouth Students\' Union official merchandise store.',
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Search Bar
+              InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const SearchOverlay(),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[800],
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: Colors.grey[700]!),
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'University of Portsmouth Students\' Union official merchandise store.',
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Search Bar
-                  InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const SearchOverlay(),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[800],
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.grey[700]!),
+                  child: Row(
+                    children: [
+                      Icon(Icons.search, color: Colors.grey[400], size: 20),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Search products...',
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 14,
+                        ),
                       ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.search, color: Colors.grey[400], size: 20),
-                          const SizedBox(width: 12),
-                          Text(
-                            'Search products...',
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-            const SizedBox(width: 40),
-
-            // Quick Links
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Quick Links',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildFooterLink(context, 'Home', '/'),
-                  _buildFooterLink(context, 'Collections', '/collections'),
-                  _buildFooterLink(context, 'About', '/about'),
-                  _buildFooterLink(context, 'Cart', '/cart'),
-                ],
-              ),
-            ),
-            const SizedBox(width: 40),
-
-            // Contact
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Contact Us',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Email: shop@upsu.net',
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Phone: 023 9284 3000',
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Cambridge Road, Portsmouth',
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        Divider(color: Colors.grey[700]),
-        const SizedBox(height: 16),
-        Text(
-          '© 2024 University of Portsmouth Students\' Union. All rights reserved.',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
+            ],
           ),
-          textAlign: TextAlign.center,
+        ),
+        const SizedBox(width: 40),
+
+        // Quick Links
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Quick Links',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildFooterLink(context, 'Home', '/'),
+              _buildFooterLink(context, 'Collections', '/collections'),
+              _buildFooterLink(context, 'About', '/about'),
+              _buildFooterLink(context, 'Cart', '/cart'),
+            ],
+          ),
+        ),
+        const SizedBox(width: 40),
+
+        // Contact
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Contact Us',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Email: shop@upsu.net',
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Phone: 023 9284 3000',
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Cambridge Road, Portsmouth',
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
