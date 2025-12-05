@@ -111,7 +111,7 @@ class HeaderWidget extends StatelessWidget {
                     children: [
                       _buildNavButton(context, 'Home', '/'),
                       const SizedBox(width: 24),
-                      _buildNavButton(context, 'Shop', '/collections'),
+                      _buildShopDropdown(context),
                       const SizedBox(width: 24),
                       _buildNavButton(context, 'About', '/about'),
                     ],
@@ -188,7 +188,7 @@ class HeaderWidget extends StatelessWidget {
               children: [
                 _buildNavButton(context, 'Home', '/'),
                 const SizedBox(width: 24),
-                _buildNavButton(context, 'Shop', '/collections'),
+                _buildShopDropdown(context),
                 const SizedBox(width: 24),
                 _buildNavButton(context, 'About', '/about'),
               ],
@@ -209,6 +209,70 @@ class HeaderWidget extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
       ),
+    );
+  }
+
+  Widget _buildShopDropdown(BuildContext context) {
+    return PopupMenuButton<String>(
+      offset: const Offset(0, 40),
+      child: TextButton(
+        onPressed: null,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Shop',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              Icons.arrow_drop_down,
+              color: Colors.black,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+      itemBuilder: (BuildContext context) => [
+        const PopupMenuItem<String>(
+          value: 'collections',
+          child: Text('All Collections'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'clothes',
+          child: Text('Clothes'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'merchandise',
+          child: Text('Merchandise'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'freshers',
+          child: Text('Freshers Sale'),
+        ),
+      ],
+      onSelected: (String value) {
+        if (value == 'collections') {
+          Navigator.pushNamed(context, '/collections');
+        } else {
+          Navigator.pushNamed(
+            context,
+            '/collection-detail',
+            arguments: {
+              'category': value,
+              'title': value == 'clothes'
+                  ? 'Clothes'
+                  : value == 'merchandise'
+                      ? 'Merchandise'
+                      : 'Freshers Sale',
+            },
+          );
+        }
+      },
     );
   }
 
