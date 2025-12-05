@@ -17,19 +17,19 @@ class CarouselSlide extends StatelessWidget {
     String route;
 
     if (type == 'carousel1') {
-      imagePath = 'images/hoodie.jpg';
+      imagePath = 'images/white_hoodie1.jpg';
       title = 'New Hoodies Collection';
       subtitle = 'Stay warm and stylish this season';
       buttonText = 'Shop Hoodies';
       route = '/all-products';
     } else if (type == 'carousel2') {
-      imagePath = 'images/cap.jpg';
+      imagePath = 'images/white_lanyard.jpg';
       title = 'Accessories & More';
       subtitle = 'Complete your look with our accessories';
       buttonText = 'View Accessories';
       route = '/all-products';
     } else {
-      imagePath = 'images/mug.jpg';
+      imagePath = 'images/backpack.jpg';
       title = 'University Merchandise';
       subtitle = 'Show your Portsmouth pride';
       buttonText = 'Shop Merchandise';
