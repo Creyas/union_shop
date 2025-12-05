@@ -298,13 +298,60 @@ class HeaderWidget extends StatelessWidget {
                     context, '/', (route) => false);
               },
             ),
-            ListTile(
+            ExpansionTile(
               leading: const Icon(Icons.shop),
               title: const Text('Shop'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/collections');
-              },
+              children: [
+                ListTile(
+                  title: const Text('  All Collections'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/collections');
+                  },
+                ),
+                ListTile(
+                  title: const Text('  Clothes'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      '/collection-detail',
+                      arguments: {
+                        'category': 'clothes',
+                        'title': 'Clothes',
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('  Merchandise'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      '/collection-detail',
+                      arguments: {
+                        'category': 'merchandise',
+                        'title': 'Merchandise',
+                      },
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('  Freshers Sale'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(
+                      context,
+                      '/collection-detail',
+                      arguments: {
+                        'category': 'freshers',
+                        'title': 'Freshers Sale',
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
             ListTile(
               leading: const Icon(Icons.info),
