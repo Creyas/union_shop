@@ -126,12 +126,9 @@ class HeaderWidget extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.search),
                       onPressed: () {
-                        SearchOverlay.show(
-                          context,
-                          onSelect: (query) {
-                            // Handle search - for now just print
-                            debugPrint('Search query: $query');
-                          },
+                        showDialog(
+                          context: context,
+                          builder: (context) => const SearchOverlay(),
                         );
                       },
                       iconSize: 24,
@@ -259,11 +256,9 @@ class HeaderWidget extends StatelessWidget {
               title: const Text('Search'),
               onTap: () {
                 Navigator.pop(context);
-                SearchOverlay.show(
-                  context,
-                  onSelect: (query) {
-                    debugPrint('Search query: $query');
-                  },
+                showDialog(
+                  context: context,
+                  builder: (context) => const SearchOverlay(),
                 );
               },
             ),
