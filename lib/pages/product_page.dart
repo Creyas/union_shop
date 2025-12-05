@@ -26,7 +26,10 @@ class _ProductPageState extends State<ProductPage> {
 
   void addToCart(BuildContext context, Product product) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    final price = double.parse(product.price.replaceAll('£', ''));
+    // Use discounted price if available
+    final priceString =
+        product.hasDiscount ? product.discountedPrice : product.price;
+    final price = double.parse(priceString.replaceAll('£', ''));
     final currentImage = getCurrentImage(product);
 
     final cartItem = CartItem(
