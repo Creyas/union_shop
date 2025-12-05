@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
-import '../widgets/products_data.dart';
 import '../data/products_data.dart';
 import 'collections.dart';
 import '../widgets/mobile_drawer.dart';
-
+import '../widgets/product_card.dart'; 
 class CollectionDetailPage extends StatelessWidget {
   const CollectionDetailPage({super.key});
 
