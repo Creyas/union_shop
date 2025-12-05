@@ -55,4 +55,91 @@ class _PrintShackPageState extends State<PrintShackPage> {
     }
   }
 
- 
+  void addToCart(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    
+    // Build personalization text
+    List<String> lines = [];
+    if (_line1Controller.text.isNotEmpty) lines.add(_line1Controller.text);
+    if (maxLines >= 2 && _line2Controller.text.isNotEmpty) {
+      lines.add(_line2Controller.text);
+    }
+    if (maxLines >= 3 && _line3Controller.text.isNotEmpty) {
+      lines.add(_line3Controller.text);
+    }
+    
+    if (lines.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter personalization text'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    
+    final personalizationText = lines.join(' | ');
+    
+    final cartItem = CartItem(
+      id: 'print-shack-${DateTime.now().millisecondsSinceEpoch}',
+      name: 'Personalized Hoodie - $personalizationText',
+      price: totalPrice,
+      color: selectedColor,
+      size: selectedSize,
+      quantity: quantity,
+      imageUrl: colorImages[selectedColor]!,
+    );
+
+    cartProvider.addItem(cartItem);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Personalized hoodie added to cart!'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    final isDesktop = MediaQuery.of(context).size.width > 900;
+
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const HeaderWidget(showBack: true),
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1400),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: isDesktop
+                      ? _buildDesktopLayout(isMobile)
+                      : _buildMobileLayout(isMobile),
+                ),
+              ),
+            ),
+            const SizedBox(height: 40),
+            const FooterWidget(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopLayout(bool isMobile) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: _buildProductImage(),
+        ),
+        const SizedBox(width: 48),
+        Expanded(
+          child: _buildCustomizationPanel(),
+        ),
+      ],
+    );
+  }
