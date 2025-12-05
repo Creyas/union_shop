@@ -12,7 +12,8 @@ class FooterWidget extends StatelessWidget {
       width: double.infinity,
       color: const Color(0xFF2c2c2c),
       padding: EdgeInsets.all(isMobile ? 24.0 : 48.0),
-      child: isMobile ? _buildMobileFooter(context) : _buildDesktopFooter(context),
+      child:
+          isMobile ? _buildMobileFooter(context) : _buildDesktopFooter(context),
     );
   }
 
@@ -69,14 +70,14 @@ class FooterWidget extends StatelessWidget {
                       builder: (context) => const SearchOverlay(),
                     );
                   }),
-                  _buildFooterLink(
-                      context, 'All Products', () => Navigator.pushNamed(context, '/all-products')),
-                  _buildFooterLink(
-                      context, 'Collections', () => Navigator.pushNamed(context, '/collections')),
-                  _buildFooterLink(
-                      context, 'Print Shack', () => Navigator.pushNamed(context, '/print-shack')),
-                  _buildFooterLink(
-                      context, 'About', () => Navigator.pushNamed(context, '/about')),
+                  _buildFooterLink(context, 'All Products',
+                      () => Navigator.pushNamed(context, '/all-products')),
+                  _buildFooterLink(context, 'Collections',
+                      () => Navigator.pushNamed(context, '/collections')),
+                  _buildFooterLink(context, 'Print Shack',
+                      () => Navigator.pushNamed(context, '/print-shack')),
+                  _buildFooterLink(context, 'About',
+                      () => Navigator.pushNamed(context, '/about')),
                 ],
               ),
             ),
@@ -157,13 +158,14 @@ class FooterWidget extends StatelessWidget {
             builder: (context) => const SearchOverlay(),
           );
         }),
+        _buildFooterLink(context, 'All Products',
+            () => Navigator.pushNamed(context, '/all-products')),
+        _buildFooterLink(context, 'Collections',
+            () => Navigator.pushNamed(context, '/collections')),
+        _buildFooterLink(context, 'Print Shack',
+            () => Navigator.pushNamed(context, '/print-shack')),
         _buildFooterLink(
-            context, 'All Products', () => Navigator.pushNamed(context, '/all-products')),
-        _buildFooterLink(
-            context, 'Collections', () => Navigator.pushNamed(context, '/collections')),
-        _buildFooterLink(
-            context, 'Print Shack', () => Navigator.pushNamed(context, '/print-shack')),
-        _buildFooterLink(context, 'About', () => Navigator.pushNamed(context, '/about')),
+            context, 'About', () => Navigator.pushNamed(context, '/about')),
         const SizedBox(height: 24),
 
         // Contact Section
@@ -196,7 +198,8 @@ class FooterWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildFooterLink(BuildContext context, String text, VoidCallback onTap) {
+  Widget _buildFooterLink(
+      BuildContext context, String text, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: InkWell(
