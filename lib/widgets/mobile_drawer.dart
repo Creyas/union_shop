@@ -116,4 +116,96 @@ class MobileDrawer extends StatelessWidget {
                           ),
                       ],
                     ),
- 
+                    title: const Text('Cart'),
+                    trailing: cartProvider.itemCount > 0
+                        ? Text(
+                            '${cartProvider.itemCount} items',
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 12),
+                          )
+                        : null,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/cart');
+                    },
+                  ),
+                  const Divider(),
+                  StreamBuilder<User?>(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      final isLoggedIn =
+                          snapshot.hasData && snapshot.data != null;
+                      final userName = snapshot.data?.displayName ?? 'Guest';
+
+                      if (isLoggedIn) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: const Color(0xFF4d2963),
+                                child: Text(
+                                  userName.isNotEmpty
+                                      ? userName[0].toUpperCase()
+                                      : 'U',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              title: Text(userName),
+                              subtitle: const Text('View Profile'),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, '/profile');
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.shopping_bag),
+                              title: const Text('My Orders'),
+                              onTap: () {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Order history coming soon!')),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              leading:
+                                  const Icon(Icons.logout, color: Colors.red),
+                              title: const Text('Sign Out',
+                                  style: TextStyle(color: Colors.red)),
+                              onTap: () async {
+                                final AuthService authService = AuthService();
+                                await authService.signOut();
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacementNamed(context, '/');
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      } else {
+                        return ListTile(
+                          leading: const Icon(Icons.login),
+                          title: const Text('Login / Sign Up'),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/auth');
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
