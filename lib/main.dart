@@ -363,16 +363,21 @@ class ProductCard extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            '/product',
-            arguments: {
-              'id': id,
-              'title': title,
-              'price': price,
-              'imageUrl': imageUrl,
-            },
-          );
+          // Navigate to Print Shack page if it's the personalized hoodie
+          if (id == 'print-shack') {
+            Navigator.pushNamed(context, '/print-shack');
+          } else {
+            Navigator.pushNamed(
+              context,
+              '/product',
+              arguments: {
+                'id': id,
+                'title': title,
+                'price': price,
+                'imageUrl': imageUrl,
+              },
+            );
+          }
         },
         child: Container(
           decoration: BoxDecoration(
@@ -408,6 +413,41 @@ class ProductCard extends StatelessWidget {
                         },
                       ),
                     ),
+                    // Custom badge for Print Shack
+                    if (id == 'print-shack')
+                      Positioned(
+                        top: 8,
+                        left: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF4d2963),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                'CUSTOMIZE',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     // Discount Badge
                     if (hasDiscount)
                       Positioned(
