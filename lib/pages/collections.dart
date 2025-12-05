@@ -11,7 +11,7 @@ class CollectionsPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const HeaderWidget(compact: true, showBack: true),
+            const HeaderWidget(showBack: true),
 
             // Page Title
             Padding(

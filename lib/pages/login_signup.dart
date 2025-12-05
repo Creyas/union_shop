@@ -47,7 +47,6 @@ class _AuthPageState extends State<AuthPage> {
       body: Column(
         children: [
           const HeaderWidget(
-            compact: true,
             showBack: true,
           ),
           Expanded(

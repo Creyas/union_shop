@@ -13,7 +13,9 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const HeaderWidget(compact: true, showBack: true),
+          const HeaderWidget(
+            showBack: true,
+          ),
 
           // Title
           Padding(

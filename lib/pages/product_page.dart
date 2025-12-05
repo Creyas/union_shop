@@ -76,7 +76,9 @@ class _ProductPageState extends State<ProductPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const HeaderWidget(compact: true, showBack: true),
+            const HeaderWidget(
+              showBack: true,
+            ),
 
             Container(
               padding: const EdgeInsets.all(24),
