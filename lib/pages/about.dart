@@ -75,6 +75,48 @@ class AboutPage extends StatelessWidget {
           ],
         ),
       ),
+      endDrawer: _buildMobileDrawer(context),
+    );
+  }
+
+  Drawer _buildMobileDrawer(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          const UserAccountsDrawerHeader(
+            titleStyle: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+            accountName: 'John Doe',
+            accountEmail: 'john.doe@upsu.net',
+          ),
+          const ListTile(
+            title: Text('Home'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePage(),
+                )),
+          ),
+          const ListTile(
+            title: Text('About'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AboutPage(),
+                )),
+          ),
+          const ListTile(
+            title: Text('Settings'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingsPage(),
+                )),
+          ),
+        ],
+      ),
     );
   }
 }
