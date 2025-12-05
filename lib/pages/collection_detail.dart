@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
+import '../widgets/products_data.dart';
 import '../data/products_data.dart';
-import '../main.dart';
 import 'collections.dart';
 import '../widgets/mobile_drawer.dart';
 

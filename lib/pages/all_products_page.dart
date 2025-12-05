@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
-import '../main.dart';
+import '../main.dart'; // Import ProductCard from main.dart
 import '../widgets/mobile_drawer.dart';
 
 class AllProductsPage extends StatefulWidget {
@@ -192,12 +192,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                           mainAxisSpacing: 24,
                           childAspectRatio: 0.75,
                           children: _paginatedProducts.map((product) {
-                            return ProductCard(
-                              id: product.id,
-                              title: product.title,
-                              price: product.price,
-                              imageUrl: product.defaultImageUrl,
-                            );
+                            return ProductCard(product: product);
                           }).toList(),
                         );
                       },
