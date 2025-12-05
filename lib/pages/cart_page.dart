@@ -49,7 +49,7 @@ class CartPage extends StatelessWidget {
             ),
           ),
 
-          const FooterWidget(compact: true),
+          const FooterWidget(),
         ],
       ),
     );
