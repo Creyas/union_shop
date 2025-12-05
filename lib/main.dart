@@ -438,3 +438,339 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 }
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+      if (_currentPage < 2) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeIn,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          const HeaderWidget(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Hero Carousel
+                  SizedBox(
+                    height: 400,
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (int page) {
+                        setState(() {
+                          _currentPage = page;
+                        });
+                      },
+                      children: [
+                        _buildCarouselItem('images/carousel1.jpg'),
+                        _buildCarouselItem('images/carousel2.jpg'),
+                        _buildCarouselItem('images/carousel3.jpg'),
+                      ],
+                    ),
+                  ),
+
+                  // Featured Products
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Featured Products',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            int crossAxisCount = constraints.maxWidth > 1200
+                                ? 4
+                                : constraints.maxWidth > 800
+                                    ? 3
+                                    : constraints.maxWidth > 600
+                                        ? 2
+                                        : 1;
+
+                            return GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount: crossAxisCount,
+                              childAspectRatio: 0.75,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                              children: ProductsData.allProducts
+                                  .take(4)
+                                  .map((product) {
+                                return ProductCard(product: product);
+                              }).toList(),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const FooterWidget(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      // Add endDrawer for mobile menu
+      endDrawer: _buildMobileDrawer(context),
+    );
+  }
+
+  Widget _buildMobileDrawer(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Drawer Header
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              color: const Color(0xFF4d2963),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Menu',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Menu Items
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.home),
+                    title: const Text('Home'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/', (route) => false);
+                    },
+                  ),
+                  ExpansionTile(
+                    leading: const Icon(Icons.shop),
+                    title: const Text('Shop'),
+                    children: [
+                      ListTile(
+                        title: const Text('  All Products'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/all-products');
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('  Collections'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/collections');
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('  Print Shack'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/print-shack');
+                        },
+                      ),
+                    ],
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.info),
+                    title: const Text('About'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/about');
+                    },
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: Stack(
+                      children: [
+                        const Icon(Icons.shopping_cart),
+                        if (cartProvider.itemCount > 0)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              child: Text(
+                                '${cartProvider.itemCount}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    title: const Text('Cart'),
+                    trailing: cartProvider.itemCount > 0
+                        ? Text(
+                            '${cartProvider.itemCount} items',
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 12),
+                          )
+                        : null,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/cart');
+                    },
+                  ),
+                  const Divider(),
+                  StreamBuilder<User?>(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      final isLoggedIn =
+                          snapshot.hasData && snapshot.data != null;
+                      final userName = snapshot.data?.displayName ?? 'Guest';
+
+                      if (isLoggedIn) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: const Color(0xFF4d2963),
+                                child: Text(
+                                  userName.isNotEmpty
+                                      ? userName[0].toUpperCase()
+                                      : 'U',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              title: Text(userName),
+                              subtitle: const Text('View Profile'),
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pushNamed(context, '/profile');
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(Icons.shopping_bag),
+                              title: const Text('My Orders'),
+                              onTap: () {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Order history coming soon!')),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              leading:
+                                  const Icon(Icons.logout, color: Colors.red),
+                              title: const Text('Sign Out',
+                                  style: TextStyle(color: Colors.red)),
+                              onTap: () async {
+                                final AuthService authService = AuthService();
+                                await authService.signOut();
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacementNamed(context, '/');
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      } else {
+                        return ListTile(
+                          leading: const Icon(Icons.login),
+                          title: const Text('Login / Sign Up'),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/auth');
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCarouselItem(String imagePath) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(imagePath),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}
+
+// ...rest of your existing ProductCard class...
