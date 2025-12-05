@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -439,5 +441,164 @@ class _AuthPageState extends State<AuthPage> {
         ],
       ),
     );
+  }
+}
+
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Get current user
+  User? get currentUser => _auth.currentUser;
+
+  // Auth state changes stream
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
+
+  // Sign up with email and password
+  Future<User?> signUpWithEmail(
+    String email,
+    String password,
+    String name,
+  ) async {
+    try {
+      // Create user account
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        // Update display name
+        await user.updateDisplayName(name);
+
+        // Store user data in Firestore
+        await _firestore.collection('users').doc(user.uid).set({
+          'uid': user.uid,
+          'name': name,
+          'email': email,
+          'createdAt': FieldValue.serverTimestamp(),
+          'lastLogin': FieldValue.serverTimestamp(),
+        });
+
+        return user;
+      }
+      return null;
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw 'An error occurred. Please try again.';
+    }
+  }
+
+  // Sign in with email and password
+  Future<User?> signInWithEmail(String email, String password) async {
+    try {
+      final UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        // Update last login time
+        await _firestore.collection('users').doc(user.uid).update({
+          'lastLogin': FieldValue.serverTimestamp(),
+        });
+      }
+
+      return user;
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw 'An error occurred. Please try again.';
+    }
+  }
+
+  // Sign out
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      throw 'Error signing out. Please try again.';
+    }
+  }
+
+  // Reset password
+  Future<void> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw 'An error occurred. Please try again.';
+    }
+  }
+
+  // Get user data from Firestore
+  Future<Map<String, dynamic>?> getUserData(String uid) async {
+    try {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      return doc.data();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Update user profile
+  Future<void> updateUserProfile({
+    required String uid,
+    String? name,
+    String? email,
+  }) async {
+    try {
+      final Map<String, dynamic> updates = {};
+
+      if (name != null) {
+        updates['name'] = name;
+        await _auth.currentUser?.updateDisplayName(name);
+      }
+
+      if (email != null) {
+        updates['email'] = email;
+        await _auth.currentUser?.updateEmail(email);
+      }
+
+      if (updates.isNotEmpty) {
+        await _firestore.collection('users').doc(uid).update(updates);
+      }
+    } catch (e) {
+      throw 'Error updating profile. Please try again.';
+    }
+  }
+
+  // Handle Firebase Auth exceptions
+  String _handleAuthException(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'email-already-in-use':
+        return 'This email is already registered. Please login instead.';
+      case 'invalid-email':
+        return 'Invalid email address.';
+      case 'operation-not-allowed':
+        return 'Operation not allowed. Please contact support.';
+      case 'weak-password':
+        return 'Password is too weak. Please use a stronger password.';
+      case 'user-disabled':
+        return 'This account has been disabled.';
+      case 'user-not-found':
+        return 'No account found with this email.';
+      case 'wrong-password':
+        return 'Incorrect password.';
+      case 'too-many-requests':
+        return 'Too many attempts. Please try again later.';
+      case 'network-request-failed':
+        return 'Network error. Please check your connection.';
+      default:
+        return 'An error occurred: ${e.message}';
+    }
   }
 }
