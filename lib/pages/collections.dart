@@ -12,7 +12,7 @@ class CollectionsPage extends StatelessWidget {
         child: Column(
           children: [
             const HeaderWidget(compact: true, showBack: true),
-            
+
             // Page Title
             Padding(
               padding: const EdgeInsets.only(top: 32.0, bottom: 8.0),
@@ -95,14 +95,15 @@ class CollectionsPage extends StatelessWidget {
                 },
               ),
             ),
-            
+
             const FooterWidget(),
           ],
         ),
       ),
     );
   }
-   Widget _buildCollectionCard(
+
+  Widget _buildCollectionCard(
     BuildContext context, {
     required String title,
     required int itemCount,
@@ -157,7 +158,7 @@ class CollectionsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Collection Info
               Container(
                 padding: const EdgeInsets.all(16),
@@ -187,5 +188,5 @@ class CollectionsPage extends StatelessWidget {
         ),
       ),
     );
-}   
+  }
 }

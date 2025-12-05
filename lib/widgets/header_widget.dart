@@ -94,7 +94,7 @@ class HeaderWidget extends StatelessWidget {
                     (route) => false,
                   ),
                   child: Image.asset(
-                    'assets/images/union_logo.png',
+                    'assets/images/union_logo.jpg',
                     height: isMobile ? 28 : 40,
                     fit: BoxFit.contain,
                     alignment: Alignment.centerLeft,
