@@ -244,6 +244,11 @@ class HeaderWidget extends StatelessWidget {
         ),
         const PopupMenuDivider(),
         const PopupMenuItem<String>(
+          value: 'print-shack',
+          child: Text('Print Shack'),
+        ),
+        const PopupMenuDivider(),
+        const PopupMenuItem<String>(
           value: 'collections',
           child: Text('Collections'),
         ),
@@ -263,6 +268,8 @@ class HeaderWidget extends StatelessWidget {
       onSelected: (String value) {
         if (value == 'all') {
           Navigator.pushNamed(context, '/all-products');
+        } else if (value == 'print-shack') {
+          Navigator.pushNamed(context, '/print-shack');
         } else if (value == 'collections') {
           Navigator.pushNamed(context, '/collections');
         } else {
