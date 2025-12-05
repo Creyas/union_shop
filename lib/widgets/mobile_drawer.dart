@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../providers/cart_provider.dart';
 import '../services/auth_service.dart';
+import 'search_overlay.dart'; // Add this import
 
 class MobileDrawer extends StatelessWidget {
   const MobileDrawer({super.key});
@@ -34,6 +35,20 @@ class MobileDrawer extends StatelessWidget {
                 ],
               ),
             ),
+
+            // Add Search Option at the top
+            ListTile(
+              leading: const Icon(Icons.search),
+              title: const Text('Search'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                showDialog(
+                  context: context,
+                  builder: (context) => const SearchOverlay(),
+                );
+              },
+            ),
+            const Divider(),
 
             // Menu Items
             Expanded(
