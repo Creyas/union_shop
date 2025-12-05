@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'dart:async';
 import 'firebase_options.dart';
 import 'providers/cart_provider.dart';
 import 'pages/product_page.dart';
@@ -11,11 +12,10 @@ import 'pages/collections.dart';
 import 'pages/collection_detail.dart';
 import 'pages/all_products_page.dart';
 import 'pages/print_shack_page.dart';
-import 'dart:async';
 import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
 import 'widgets/product_card.dart';
-import 'widgets/mobile_drawer.dart'; // Add this line
+import 'widgets/mobile_drawer.dart';
 import 'data/products_data.dart';
 import 'pages/profile_page.dart';
 
@@ -198,5 +198,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-// Remove the ProductCard class - it's now in widgets/product_card.dart
