@@ -3,6 +3,7 @@ import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../widgets/mobile_drawer.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -191,6 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     return Scaffold(
+      endDrawer: const MobileDrawer(),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
