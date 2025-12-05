@@ -368,4 +368,69 @@ class _SearchOverlayState extends State<SearchOverlay> {
     );
   }
 
- 
+  Widget _buildProductResultTile(Product product) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            product.defaultImageUrl,
+            width: 60,
+            height: 60,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: 60,
+                height: 60,
+                color: Colors.grey[300],
+                child: const Icon(Icons.image, size: 30),
+              );
+            },
+          ),
+        ),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                product.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (product.hasDiscount)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '${product.discountPercentage!.toInt()}% OFF',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        subtitle: Text(
+          product.hasDiscount
+              ? '${product.price} → ${product.discountedPrice}'
+              : product.price,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: product.hasDiscount ? Colors.red : const Color(0xFF4d2963),
+          ),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => _navigateToProduct(product),
+      ),
+    );
+  }
+}
+
