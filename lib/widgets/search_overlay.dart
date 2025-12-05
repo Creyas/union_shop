@@ -35,7 +35,15 @@ class _SearchOverlayState extends State<SearchOverlay> {
       'description': 'Customize your own hoodie with personalization',
       'route': '/print-shack',
       'icon': Icons.print,
-      'keywords': ['print', 'custom', 'personalize', 'hoodie', 'customize', 'text', 'name'],
+      'keywords': [
+        'print',
+        'custom',
+        'personalize',
+        'hoodie',
+        'customize',
+        'text',
+        'name'
+      ],
     },
     {
       'title': 'Collections',
@@ -50,7 +58,14 @@ class _SearchOverlayState extends State<SearchOverlay> {
       'route': '/collection-detail',
       'arguments': {'category': 'clothes', 'title': 'Clothes'},
       'icon': Icons.checkroom,
-      'keywords': ['clothes', 'clothing', 'apparel', 'shirts', 'hoodies', 'wear'],
+      'keywords': [
+        'clothes',
+        'clothing',
+        'apparel',
+        'shirts',
+        'hoodies',
+        'wear'
+      ],
     },
     {
       'title': 'Merchandise',
@@ -66,7 +81,15 @@ class _SearchOverlayState extends State<SearchOverlay> {
       'route': '/collection-detail',
       'arguments': {'category': 'freshers', 'title': 'Freshers Sale'},
       'icon': Icons.local_offer,
-      'keywords': ['sale', 'freshers', 'discount', 'offer', 'deals', 'cheap', 'savings'],
+      'keywords': [
+        'sale',
+        'freshers',
+        'discount',
+        'offer',
+        'deals',
+        'cheap',
+        'savings'
+      ],
     },
     {
       'title': 'About',
@@ -433,4 +456,3 @@ class _SearchOverlayState extends State<SearchOverlay> {
     );
   }
 }
-
