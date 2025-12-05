@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../providers/cart_provider.dart';
 import '../services/auth_service.dart';
 import 'search_overlay.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class HeaderWidget extends StatelessWidget {
   final bool showBack;
@@ -17,11 +18,35 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
-    // Add error handling for Firebase
+    // For web, add extra delay to ensure Firebase is ready
+    if (kIsWeb) {
+      return FutureBuilder(
+        future: Future.delayed(const Duration(milliseconds: 100)),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return _buildHeader(context, isMobile, false, 'Guest');
+          }
+          
+          return _buildAuthStreamBuilder(context, isMobile);
+        },
+      );
+    }
+
+    return _buildAuthStreamBuilder(context, isMobile);
+  }
+
+  Widget _buildAuthStreamBuilder(BuildContext context, bool isMobile) {
     try {
       return StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+          // Handle errors
+          if (snapshot.hasError) {
+            print('Firebase Auth Stream error: ${snapshot.error}');
+            return _buildHeader(context, isMobile, false, 'Guest');
+          }
+
+          // Handle loading
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildHeader(context, isMobile, false, 'Guest');
           }
@@ -34,7 +59,6 @@ class HeaderWidget extends StatelessWidget {
       );
     } catch (e) {
       print('Firebase Auth error: $e');
-      // Fallback: show header without auth
       return _buildHeader(context, isMobile, false, 'Guest');
     }
   }
@@ -65,6 +89,8 @@ class HeaderWidget extends StatelessWidget {
 
   Widget _buildDesktopHeader(
       BuildContext context, bool isLoggedIn, String userName) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -82,13 +108,20 @@ class HeaderWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(context, '/');
                 },
-                child: const Text(
-                  'The Union Shop',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF4d2963),
-                  ),
+                child: Image.asset(
+                  'assets/union_logo.jpg',
+                  height: 40,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Text(
+                      'The Union Shop',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4d2963),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -138,9 +171,39 @@ class HeaderWidget extends StatelessWidget {
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              onPressed: () => Navigator.pushNamed(context, '/cart'),
+            // Shopping cart with badge
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () => Navigator.pushNamed(context, '/cart'),
+                ),
+                if (cartProvider.itemCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 18,
+                        minHeight: 18,
+                      ),
+                      child: Text(
+                        '${cartProvider.itemCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(width: 8),
             if (isLoggedIn)
@@ -162,6 +225,8 @@ class HeaderWidget extends StatelessWidget {
 
   Widget _buildMobileHeader(
       BuildContext context, bool isLoggedIn, String userName) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -174,13 +239,20 @@ class HeaderWidget extends StatelessWidget {
               ),
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, '/'),
-              child: const Text(
-                'The Union Shop',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF4d2963),
-                ),
+              child: Image.asset(
+                'assets/union_logo.jpg',
+                height: 32,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Text(
+                    'The Union Shop',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4d2963),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -196,9 +268,39 @@ class HeaderWidget extends StatelessWidget {
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              onPressed: () => Navigator.pushNamed(context, '/cart'),
+            // Shopping cart with badge
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () => Navigator.pushNamed(context, '/cart'),
+                ),
+                if (cartProvider.itemCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 18,
+                        minHeight: 18,
+                      ),
+                      child: Text(
+                        '${cartProvider.itemCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             Builder(
               builder: (context) => IconButton(
@@ -269,18 +371,22 @@ class HeaderWidget extends StatelessWidget {
         ),
       ],
       onSelected: (String value) async {
-        final AuthService authService = AuthService();
-        if (value == 'profile') {
-          Navigator.pushNamed(context, '/profile');
-        } else if (value == 'orders') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Order history coming soon!')),
-          );
-        } else if (value == 'logout') {
-          await authService.signOut();
-          if (context.mounted) {
-            Navigator.pushReplacementNamed(context, '/');
+        try {
+          final AuthService authService = AuthService();
+          if (value == 'profile') {
+            Navigator.pushNamed(context, '/profile');
+          } else if (value == 'orders') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Order history coming soon!')),
+            );
+          } else if (value == 'logout') {
+            await authService.signOut();
+            if (context.mounted) {
+              Navigator.pushReplacementNamed(context, '/');
+            }
           }
+        } catch (e) {
+          print('Menu action error: $e');
         }
       },
     );
