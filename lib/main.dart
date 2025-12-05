@@ -1,773 +1,440 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'providers/cart_provider.dart';
-import 'pages/product_page.dart';
-import 'pages/about.dart';
-import 'pages/login_signup.dart';
-import 'pages/cart_page.dart';
-import 'pages/collections.dart';
-import 'pages/collection_detail.dart';
-import 'pages/all_products_page.dart';
-import 'pages/print_shack_page.dart';
-import 'dart:async';
-import 'widgets/header_widget.dart';
-import 'widgets/footer_widget.dart';
-import 'data/products_data.dart';
-import 'pages/profile_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../providers/cart_provider.dart';
+import '../services/auth_service.dart';
+import 'search_overlay.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+class HeaderWidget extends StatelessWidget {
+  final bool showBack;
 
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    print('✅ Firebase initialized successfully');
-  } catch (e) {
-    print('⚠️ Firebase initialization error: $e');
-  }
-
-  runApp(const UnionShopApp());
-}
-
-class UnionShopApp extends StatelessWidget {
-  const UnionShopApp({super.key});
+  const HeaderWidget({
+    super.key,
+    this.showBack = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CartProvider()),
-      ],
-      child: MaterialApp(
-        title: 'Union Shop',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
-        ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const HomePage(),
-          '/product': (context) => const ProductPage(),
-          '/about': (context) => const AboutPage(),
-          '/auth': (context) => const LoginSignupPage(),
-          '/cart': (context) => const CartPage(),
-          '/collections': (context) => const CollectionsPage(),
-          '/collection-detail': (context) => const CollectionDetailPage(),
-          '/all-products': (context) => const AllProductsPage(),
-          '/print-shack': (context) => const PrintShackPage(),
-          '/profile': (context) => const ProfilePage(),
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    // For web, add extra delay to ensure Firebase is ready
+    if (kIsWeb) {
+      return FutureBuilder(
+        future: Future.delayed(const Duration(milliseconds: 100)),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return _buildHeader(context, isMobile, false, 'Guest');
+          }
+          
+          return _buildAuthStreamBuilder(context, isMobile);
         },
-      ),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-  Timer? _timer;
-
-  final List<Map<String, String>> _heroSlides = [
-    {
-      'title': 'Welcome to The Union Shop',
-      'subtitle': 'Official University of Portsmouth Merchandise',
-      'description':
-          'Discover exclusive apparel, accessories, and essentials for student life',
-      'image': 'assets/images/white_hoodie1.jpg',
-    },
-    {
-      'title': 'Freshers Sale - 25% OFF',
-      'subtitle': 'Limited Time Offer',
-      'description':
-          'Get amazing discounts on selected items. Perfect for starting your university journey!',
-      'image': 'assets/images/beerpong.jpg',
-    },
-    {
-      'title': 'Quality Merchandise',
-      'subtitle': 'Show Your University Pride',
-      'description':
-          'From hoodies to accessories, find everything you need to represent UoP',
-      'image': 'assets/images/backpack.jpg',
-    },
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-      if (_currentPage < _heroSlides.length - 1) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
-
-      _pageController.animateToPage(
-        _currentPage,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeIn,
       );
-    });
+    }
+
+    return _buildAuthStreamBuilder(context, isMobile);
   }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    _pageController.dispose();
-    super.dispose();
+  Widget _buildAuthStreamBuilder(BuildContext context, bool isMobile) {
+    try {
+      return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          // Handle errors
+          if (snapshot.hasError) {
+            print('Firebase Auth Stream error: ${snapshot.error}');
+            return _buildHeader(context, isMobile, false, 'Guest');
+          }
+
+          // Handle loading
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildHeader(context, isMobile, false, 'Guest');
+          }
+
+          final isLoggedIn = snapshot.hasData && snapshot.data != null;
+          final userName = snapshot.data?.displayName ?? 'Guest';
+
+          return _buildHeader(context, isMobile, isLoggedIn, userName);
+        },
+      );
+    } catch (e) {
+      print('Firebase Auth error: $e');
+      return _buildHeader(context, isMobile, false, 'Guest');
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const HeaderWidget(),
-
-            // Hero Section with Auto-Rotating Carousel
-            SizedBox(
-              height: isMobile ? 400 : 500,
-              child: Stack(
-                children: [
-                  PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentPage = index;
-                      });
-                    },
-                    itemCount: _heroSlides.length,
-                    itemBuilder: (context, index) {
-                      return _buildHeroSlide(_heroSlides[index], isMobile);
-                    },
-                  ),
-                  // Page Indicators
-                  Positioned(
-                    bottom: 20,
-                    left: 0,
-                    right: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        _heroSlides.length,
-                        (index) => Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          width: _currentPage == index ? 24 : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: _currentPage == index
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 48),
-
-            // Featured Products Section
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 16.0 : 24.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Featured Products',
-                        style: TextStyle(
-                          fontSize: isMobile ? 24 : 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/all-products');
-                        },
-                        child: const Text(
-                          'View All',
-                          style: TextStyle(
-                            color: Color(0xFF4d2963),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      int crossAxisCount = 1;
-                      double childAspectRatio = 0.75;
-
-                      if (constraints.maxWidth > 900) {
-                        crossAxisCount = 4;
-                        childAspectRatio = 0.75;
-                      } else if (constraints.maxWidth > 600) {
-                        crossAxisCount = 2;
-                        childAspectRatio = 0.75;
-                      }
-
-                      return GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: 24,
-                        mainAxisSpacing: 24,
-                        childAspectRatio: childAspectRatio,
-                        children:
-                            ProductsData.allProducts.take(4).map((product) {
-                          return ProductCard(
-                            id: product.id,
-                            title: product.title,
-                            price: product.price,
-                            imageUrl: product.defaultImageUrl,
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 48),
-            const FooterWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeroSlide(Map<String, String> slide, bool isMobile) {
+  Widget _buildHeader(
+      BuildContext context, bool isMobile, bool isLoggedIn, String userName) {
     return Container(
-      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16.0 : 24.0,
+        vertical: 16.0,
+      ),
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(slide['image']!),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              Colors.black.withOpacity(0.7),
-              Colors.transparent,
-            ],
-          ),
-        ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1400),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 24.0 : 48.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    slide['subtitle']!,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: isMobile ? 14 : 16,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    slide['title']!,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: isMobile ? 32 : 56,
-                      fontWeight: FontWeight.bold,
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: isMobile ? double.infinity : 500,
-                    child: Text(
-                      slide['description']!,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: isMobile ? 14 : 18,
-                        height: 1.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/all-products');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4d2963),
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 24 : 32,
-                        vertical: isMobile ? 12 : 16,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      'Browse Products',
-                      style: TextStyle(
-                        fontSize: isMobile ? 14 : 16,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final String id;
-  final String title;
-  final String price;
-  final String imageUrl;
-
-  const ProductCard({
-    super.key,
-    required this.id,
-    required this.title,
-    required this.price,
-    required this.imageUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final product = ProductsData.getProductById(id);
-    final hasDiscount = product?.hasDiscount ?? false;
-
-    return MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: () {
-            // Navigate to Print Shack page if it's the personalized hoodie
-            if (id == 'print-shack') {
-              Navigator.pushNamed(context, '/print-shack');
-            } else {
-              Navigator.pushNamed(
-                context,
-                '/product',
-                arguments: {
-                  'id': id,
-                  'title': title,
-                  'price': price,
-                  'imageUrl': imageUrl,
-                },
-              );
-            }
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey[300]!),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                        ),
-                        child: Image.asset(
-                          imageUrl,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[300],
-                              child: const Center(
-                                child: Icon(
-                                  Icons.image_not_supported,
-                                  size: 50,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      // Custom badge for Print Shack
-                      if (id == 'print-shack')
-                        Positioned(
-                          top: 8,
-                          left: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF4d2963),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                  size: 14,
-                                ),
-                                SizedBox(width: 4),
-                                Text(
-                                  'CUSTOMIZE',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      // Discount Badge
-                      if (hasDiscount)
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              '${product!.discountPercentage!.toInt()}% OFF',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-                      if (hasDiscount) ...[
-                        Row(
-                          children: [
-                            Text(
-                              price,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              product!.discountedPrice,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ] else
-                        Text(
-                          price,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF4d2963),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
-  }
-}
-
-class HeroCarousel extends StatefulWidget {
-  final double height;
-  final List<String> imageUrls;
-  final VoidCallback onBrowse;
-
-  const HeroCarousel({
-    super.key,
-    required this.height,
-    required this.imageUrls,
-    required this.onBrowse,
-  });
-
-  @override
-  State<HeroCarousel> createState() => _HeroCarouselState();
-}
-
-class _HeroCarouselState extends State<HeroCarousel> {
-  late final PageController _pageController;
-  Timer? _timer;
-  int _current = 0;
-  bool _isPaused = false;
-
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
-      if (!mounted || _isPaused) return;
-      final next = (_current + 1) % widget.imageUrls.length;
-      _pageController.animateToPage(
-        next,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
-  void _stopTimer() {
-    _timer?.cancel();
-    _timer = null;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: 0);
-    _startTimer();
-  }
-
-  @override
-  void dispose() {
-    _stopTimer();
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  void _togglePaused() {
-    setState(() {
-      _isPaused = !_isPaused;
-      if (_isPaused) {
-        _stopTimer();
-      } else {
-        _startTimer();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return SizedBox(
-      height: widget.height,
-      width: double.infinity,
-      child: Stack(
-        children: [
-          // PageView for images
-          Positioned.fill(
-            child: PageView.builder(
-              controller: _pageController,
-              physics: const PageScrollPhysics(),
-              itemCount: widget.imageUrls.length,
-              onPageChanged: (index) {
-                setState(() => _current = index);
-                if (!_isPaused) {
-                  _stopTimer();
-                  _startTimer();
-                }
-              },
-              itemBuilder: (context, index) {
-                final url = widget.imageUrls[index];
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    url.startsWith('http')
-                        ? Image.network(
-                            url,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Colors.grey[300],
-                                child: const Center(
-                                  child: Icon(Icons.image_not_supported,
-                                      color: Colors.grey),
-                                ),
-                              );
-                            },
-                          )
-                        : Image.asset(
-                            url,
-                            fit: BoxFit.cover,
-                          ),
-                    const DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(0, 0, 0, 0.5),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-
-          // Content overlay
-          Positioned(
-            left: 16,
-            right: 16,
-            top: isMobile ? 40 : 80,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Placeholder Hero Title',
-                  style: TextStyle(
-                    fontSize: isMobile ? 24 : 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    height: 1.2,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: isMobile ? 8 : 16),
-                Text(
-                  "This is placeholder text for the hero section.",
-                  style: TextStyle(
-                    fontSize: isMobile ? 14 : 20,
-                    color: Colors.white,
-                    height: 1.5,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: isMobile ? 16 : 32),
-                ElevatedButton(
-                  onPressed: widget.onBrowse,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4d2963),
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isMobile ? 20 : 24,
-                      vertical: isMobile ? 10 : 12,
-                    ),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                  ),
-                  child: Text(
-                    'BROWSE PRODUCTS',
-                    style: TextStyle(
-                      fontSize: isMobile ? 12 : 14,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Bottom bar: dots centered, pause/play on right
-          Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: Wrap(
-                      spacing: 4,
-                      children: List.generate(widget.imageUrls.length, (i) {
-                        final selected = i == _current;
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          width: selected ? 18 : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: selected ? Colors.white : Colors.white54,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Material(
-                  color: Colors.black45,
-                  shape: const CircleBorder(),
-                  child: IconButton(
-                    icon: Icon(
-                      _isPaused ? Icons.play_arrow : Icons.pause,
-                      color: Colors.white,
-                      size: isMobile ? 16 : 18,
-                    ),
-                    onPressed: _togglePaused,
-                    tooltip: _isPaused ? 'Resume' : 'Pause',
-                    padding: EdgeInsets.all(isMobile ? 6 : 8),
-                  ),
-                ),
-              ],
-            ),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
+      child: isMobile
+          ? _buildMobileHeader(context, isLoggedIn, userName)
+          : _buildDesktopHeader(context, isLoggedIn, userName),
+    );
+  }
+
+  Widget _buildDesktopHeader(
+      BuildContext context, bool isLoggedIn, String userName) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Logo and Back Button
+        Row(
+          children: [
+            if (showBack)
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/');
+                },
+                child: Image.asset(
+                  'assets/union_logo.jpg',
+                  height: 40,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Text(
+                      'The Union Shop',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4d2963),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // Navigation Menu
+        Row(
+          children: [
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/'),
+              child: const Text(
+                'Home',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            _buildShopDropdown(context),
+            const SizedBox(width: 8),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/about'),
+              child: const Text(
+                'About',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        // Icons and User Menu
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const SearchOverlay(),
+                );
+              },
+            ),
+            // Shopping cart with badge
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () => Navigator.pushNamed(context, '/cart'),
+                ),
+                if (cartProvider.itemCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 18,
+                        minHeight: 18,
+                      ),
+                      child: Text(
+                        '${cartProvider.itemCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(width: 8),
+            if (isLoggedIn)
+              _buildUserMenu(context, userName)
+            else
+              ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, '/auth'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4d2963),
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Login'),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileHeader(
+      BuildContext context, bool isLoggedIn, String userName) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            if (showBack)
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+            GestureDetector(
+              onTap: () => Navigator.pushNamed(context, '/'),
+              child: Image.asset(
+                'assets/union_logo.jpg',
+                height: 32,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Text(
+                    'The Union Shop',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4d2963),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const SearchOverlay(),
+                );
+              },
+            ),
+            // Shopping cart with badge
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart),
+                  onPressed: () => Navigator.pushNamed(context, '/cart'),
+                ),
+                if (cartProvider.itemCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 18,
+                        minHeight: 18,
+                      ),
+                      child: Text(
+                        '${cartProvider.itemCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            Builder(
+              builder: (context) => IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserMenu(BuildContext context, String userName) {
+    return PopupMenuButton<String>(
+      offset: const Offset(0, 40),
+      child: Chip(
+        avatar: CircleAvatar(
+          backgroundColor: const Color(0xFF4d2963),
+          child: Text(
+            userName.isNotEmpty ? userName[0].toUpperCase() : 'U',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        label: Text(
+          userName,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+      itemBuilder: (BuildContext context) => [
+        const PopupMenuItem<String>(
+          value: 'profile',
+          child: Row(
+            children: [
+              Icon(Icons.person, size: 20),
+              SizedBox(width: 12),
+              Text('My Profile'),
+            ],
+          ),
+        ),
+        const PopupMenuItem<String>(
+          value: 'orders',
+          child: Row(
+            children: [
+              Icon(Icons.shopping_bag, size: 20),
+              SizedBox(width: 12),
+              Text('My Orders'),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(),
+        const PopupMenuItem<String>(
+          value: 'logout',
+          child: Row(
+            children: [
+              Icon(Icons.logout, size: 20, color: Colors.red),
+              SizedBox(width: 12),
+              Text('Sign Out', style: TextStyle(color: Colors.red)),
+            ],
+          ),
+        ),
+      ],
+      onSelected: (String value) async {
+        try {
+          final AuthService authService = AuthService();
+          if (value == 'profile') {
+            Navigator.pushNamed(context, '/profile');
+          } else if (value == 'orders') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Order history coming soon!')),
+            );
+          } else if (value == 'logout') {
+            await authService.signOut();
+            if (context.mounted) {
+              Navigator.pushReplacementNamed(context, '/');
+            }
+          }
+        } catch (e) {
+          print('Menu action error: $e');
+        }
+      },
+    );
+  }
+
+  Widget _buildShopDropdown(BuildContext context) {
+    return PopupMenuButton<String>(
+      offset: const Offset(0, 40),
+      child: TextButton(
+        onPressed: null,
+        child: Row(
+          children: const [
+            Text(
+              'Shop',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(width: 4),
+            Icon(Icons.arrow_drop_down, color: Colors.black, size: 20),
+          ],
+        ),
+      ),
+      itemBuilder: (BuildContext context) => [
+        const PopupMenuItem<String>(
+          value: 'all',
+          child: Text('All Products'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'collections',
+          child: Text('Collections'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'print-shack',
+          child: Text('Print Shack'),
+        ),
+      ],
+      onSelected: (String value) {
+        if (value == 'all') {
+          Navigator.pushNamed(context, '/all-products');
+        } else if (value == 'collections') {
+          Navigator.pushNamed(context, '/collections');
+        } else if (value == 'print-shack') {
+          Navigator.pushNamed(context, '/print-shack');
+        }
+      },
     );
   }
 }
