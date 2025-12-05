@@ -503,4 +503,25 @@ class _PrintShackPageState extends State<PrintShackPage> {
         ),
         const SizedBox(height: 24),
 
-    
+        // Product Description
+        const Text(
+          'Product Description',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'Create your own personalized hoodie! Add up to 3 lines of custom text. Perfect for teams, events, or personal style. High-quality printing ensures your design looks great wash after wash.',
+          style: TextStyle(
+            fontSize: 14,
+            height: 1.6,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
