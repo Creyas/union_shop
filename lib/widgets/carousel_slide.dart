@@ -10,22 +10,30 @@ class CarouselSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor;
+    String imagePath;
     String title;
     String subtitle;
+    String buttonText;
+    String route;
 
     if (type == 'carousel1') {
-      backgroundColor = const Color(0xFF4d2963); // Purple
-      title = 'Welcome to Union Shop';
-      subtitle = 'Quality merchandise for Portsmouth students';
+      imagePath = 'images/hoodie.jpg';
+      title = 'New Hoodies Collection';
+      subtitle = 'Stay warm and stylish this season';
+      buttonText = 'Shop Hoodies';
+      route = '/all-products';
     } else if (type == 'carousel2') {
-      backgroundColor = const Color(0xFF2c5f7d); // Blue
-      title = 'New Arrivals';
-      subtitle = 'Check out our latest collection';
+      imagePath = 'images/cap.jpg';
+      title = 'Accessories & More';
+      subtitle = 'Complete your look with our accessories';
+      buttonText = 'View Accessories';
+      route = '/all-products';
     } else {
-      backgroundColor = const Color(0xFF1a4d2e); // Green
-      title = 'Student Discounts';
-      subtitle = 'Great prices on all items';
+      imagePath = 'images/mug.jpg';
+      title = 'University Merchandise';
+      subtitle = 'Show your Portsmouth pride';
+      buttonText = 'Shop Merchandise';
+      route = '/all-products';
     }
 
     final isMobile = MediaQuery.of(context).size.width < 600;
@@ -33,13 +41,13 @@ class CarouselSlide extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            backgroundColor,
-            backgroundColor.withOpacity(0.7),
-          ],
+        image: DecorationImage(
+          image: AssetImage(imagePath),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.black.withOpacity(0.4),
+            BlendMode.darken,
+          ),
         ),
       ),
       child: Center(
@@ -54,6 +62,13 @@ class CarouselSlide extends StatelessWidget {
                   fontSize: isMobile ? 32 : 48,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      offset: const Offset(0, 2),
+                      blurRadius: 8,
+                      color: Colors.black.withOpacity(0.8),
+                    ),
+                  ],
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -63,17 +78,24 @@ class CarouselSlide extends StatelessWidget {
                 style: TextStyle(
                   fontSize: isMobile ? 18 : 24,
                   color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      offset: const Offset(0, 1),
+                      blurRadius: 6,
+                      color: Colors.black.withOpacity(0.8),
+                    ),
+                  ],
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/all-products');
+                  Navigator.pushNamed(context, route);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: backgroundColor,
+                  backgroundColor: const Color(0xFF4d2963),
+                  foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(
                     horizontal: isMobile ? 32 : 48,
                     vertical: isMobile ? 12 : 16,
@@ -82,8 +104,10 @@ class CarouselSlide extends StatelessWidget {
                     fontSize: isMobile ? 16 : 18,
                     fontWeight: FontWeight.bold,
                   ),
+                  elevation: 5,
+                  shadowColor: Colors.black.withOpacity(0.5),
                 ),
-                child: const Text('Shop Now'),
+                child: Text(buttonText),
               ),
             ],
           ),
