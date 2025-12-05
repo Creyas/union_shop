@@ -34,18 +34,6 @@ class CollectionDetailPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Collection'),
-        backgroundColor: Colors.grey[800],
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      drawer: const MobileDrawer(),
       endDrawer: const MobileDrawer(),
       body: SingleChildScrollView(
         child: Column(
@@ -109,10 +97,7 @@ class CollectionDetailPage extends StatelessWidget {
                     childAspectRatio: childAspectRatio,
                     children: products.map((product) {
                       return ProductCard(
-                        id: product.id,
-                        title: product.title,
-                        price: product.price,
-                        imageUrl: product.defaultImageUrl,
+                        product: product,
                       );
                     }).toList(),
                   );
