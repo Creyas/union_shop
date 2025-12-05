@@ -91,4 +91,78 @@ class _SearchOverlayState extends State<SearchOverlay> {
     },
   ];
 
- 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _performSearch(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _searchResults = [];
+        _pageResults = [];
+        _isSearching = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isSearching = true;
+    });
+
+    final lowerQuery = query.toLowerCase();
+
+    // Search products
+    _searchResults = ProductsData.allProducts.where((product) {
+      return product.title.toLowerCase().contains(lowerQuery) ||
+          product.description.toLowerCase().contains(lowerQuery) ||
+          product.id.toLowerCase().contains(lowerQuery);
+    }).toList();
+
+    // Search pages
+    _pageResults = _pages.where((page) {
+      return page['title'].toString().toLowerCase().contains(lowerQuery) ||
+          page['description'].toString().toLowerCase().contains(lowerQuery) ||
+          (page['keywords'] as List<String>).any(
+            (keyword) => keyword.contains(lowerQuery),
+          );
+    }).toList();
+
+    setState(() {
+      _isSearching = false;
+    });
+  }
+
+  void _navigateToPage(Map<String, dynamic> page) {
+    Navigator.pop(context); // Close search overlay
+    if (page['arguments'] != null) {
+      Navigator.pushNamed(
+        context,
+        page['route'],
+        arguments: page['arguments'],
+      );
+    } else {
+      Navigator.pushNamed(context, page['route']);
+    }
+  }
+
+  void _navigateToProduct(Product product) {
+    Navigator.pop(context); // Close search overlay
+    if (product.id == 'print-shack') {
+      Navigator.pushNamed(context, '/print-shack');
+    } else {
+      Navigator.pushNamed(
+        context,
+        '/product',
+        arguments: {
+          'id': product.id,
+          'title': product.title,
+          'price': product.price,
+          'imageUrl': product.defaultImageUrl,
+        },
+      );
+    }
+  }
+
+  
