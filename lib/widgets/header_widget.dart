@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../providers/cart_provider.dart';
 import '../services/auth_service.dart';
+import 'search_overlay.dart'; // Add this import
 
 class HeaderWidget extends StatelessWidget {
   final bool showBack;
@@ -130,7 +131,18 @@ class HeaderWidget extends StatelessWidget {
         ),
         Row(
           children: [
-            // Removed search button temporarily
+            // Add Search Button
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const SearchOverlay(),
+                );
+              },
+              tooltip: 'Search',
+            ),
+            const SizedBox(width: 8),
             Stack(
               children: [
                 IconButton(
@@ -218,7 +230,17 @@ class HeaderWidget extends StatelessWidget {
         ),
         Row(
           children: [
-            // Removed search button temporarily
+            // Add Search Button
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const SearchOverlay(),
+                );
+              },
+              tooltip: 'Search',
+            ),
             Stack(
               children: [
                 IconButton(
