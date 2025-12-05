@@ -7,59 +7,73 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double horizontalPadding =
-        MediaQuery.of(context).size.width > 900 ? 120.0 : 24.0;
-
     return Scaffold(
-      body: Column(
-        children: [
-          const HeaderWidget(compact: true, showBack: true),
-
-          // Title
-          Padding(
-            padding: const EdgeInsets.only(top: 32.0, bottom: 8.0),
-            child: Center(
-              child: Text(
-                'About us',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.grey[800],
-                ),
-              ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const HeaderWidget(
+              showBack: true,
             ),
-          ),
-
-          // Body content (preserves your original string)
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: SingleChildScrollView(
-                child: Text(
-                  """Welcome to the Union Shop!
-
-We’re dedicated to giving you the very best University branded products, with a range of clothing and merchandise available to shop all year round! We even offer an exclusive personalisation service!
-
-All online purchases are available for delivery or instore collection!
-
-We hope you enjoy our products as much as we enjoy offering them to you. If you have any questions or comments, please don’t hesitate to contact us at hello@upsu.net.
-
-Happy shopping!
-
-The Union Shop & Reception Team​​​​​​​​​""",
-                  style: TextStyle(
-                    fontSize: 16,
-                    height: 1.8,
-                    color: Colors.grey[700],
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1200),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'About Union Shop',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Welcome to the University of Portsmouth Students\' Union Shop!',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'We provide high-quality merchandise for students, featuring comfortable clothing and accessories that represent our vibrant student community.',
+                        style: TextStyle(fontSize: 16, height: 1.5),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Our Mission',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'To offer affordable, quality products that help students show their university pride while supporting student services and activities.',
+                        style: TextStyle(fontSize: 16, height: 1.5),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Contact Us',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Email: shop@upsu.net\nPhone: 023 9284 3000\nLocation: Student Union Building, Cambridge Road, Portsmouth',
+                        style: TextStyle(fontSize: 16, height: 1.5),
+                      ),
+                    ],
                   ),
-                  textAlign: TextAlign.left,
                 ),
               ),
             ),
-          ),
-
-          const FooterWidget(compact: true),
-        ],
+            const FooterWidget(),
+          ],
+        ),
       ),
     );
   }
