@@ -87,36 +87,20 @@ class ProductCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            if (product.hasDiscount) ...[
-                              Text(
-                                product.price,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                product.discountPrice ?? '',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ] else
-                              Text(
-                                product.price,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF4d2963),
-                                ),
-                              ),
-                          ],
+                        Text(
+                          product.price,
+                          style: TextStyle(
+                            fontSize: product.hasDiscount ? 14 : 16,
+                            fontWeight: product.hasDiscount
+                                ? FontWeight.normal
+                                : FontWeight.bold,
+                            color: product.hasDiscount
+                                ? Colors.grey
+                                : const Color(0xFF4d2963),
+                            decoration: product.hasDiscount
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
                         ),
                         if (product.hasDiscount)
                           Container(
