@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import 'search_overlay.dart';
-import '../pages/login_signup.dart';
+import 'pages/login_signup.dart';
 
 class HeaderWidget extends StatelessWidget {
   final bool compact;
@@ -71,6 +71,8 @@ class HeaderWidget extends StatelessWidget {
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () => Navigator.pop(context),
                   iconSize: isMobile ? 20 : 24,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
                 )
               else if (isMobile)
                 IconButton(
@@ -79,89 +81,104 @@ class HeaderWidget extends StatelessWidget {
                     _showMobileMenu(context);
                   },
                   iconSize: 24,
+                  padding: const EdgeInsets.all(8),
                 ),
 
-              if (!isMobile || !showBack) SizedBox(width: isMobile ? 8 : 16),
+              SizedBox(width: isMobile ? 8 : 16),
 
               // Logo
-              GestureDetector(
-                onTap: () => Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/',
-                  (route) => false,
-                ),
-                child: Image.asset(
-                  'assets/images/union_logo.png',
-                  height: isMobile ? 24 : 40,
-                  fit: BoxFit.contain,
-                  alignment: Alignment.centerLeft,
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/',
+                    (route) => false,
+                  ),
+                  child: Image.asset(
+                    'assets/images/union_logo.png',
+                    height: isMobile ? 28 : 40,
+                    fit: BoxFit.contain,
+                    alignment: Alignment.centerLeft,
+                  ),
                 ),
               ),
 
-              // Spacer to push icons to the right
-              const Spacer(),
-
-              // Right side icons
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {
-                      SearchOverlay.show(
-                        context,
-                        onSelect: (query) {
-                          Navigator.pushNamed(context, '/product',
-                              arguments: {'query': query});
-                        },
-                      );
-                    },
-                    iconSize: isMobile ? 18 : 24,
-                    padding: isMobile ? const EdgeInsets.all(8) : null,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.person_outline),
-                    onPressed: () => Navigator.pushNamed(context, '/auth'),
-                    iconSize: isMobile ? 18 : 24,
-                    padding: isMobile ? const EdgeInsets.all(8) : null,
-                  ),
-                  Stack(
+              // Desktop Navigation
+              if (isWideScreen && !compact)
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.shopping_bag_outlined),
-                        onPressed: () => Navigator.pushNamed(context, '/cart'),
-                        iconSize: isMobile ? 18 : 24,
-                        padding: isMobile ? const EdgeInsets.all(8) : null,
-                      ),
-                      if (cartProvider.itemCount > 0)
-                        Positioned(
-                          right: 4,
-                          top: 4,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 16,
-                              minHeight: 16,
-                            ),
-                            child: Text(
-                              '${cartProvider.itemCount}',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: isMobile ? 8 : 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
+                      _buildNavButton(context, 'Home', '/'),
+                      const SizedBox(width: 24),
+                      _buildNavButton(context, 'Shop', '/collections'),
+                      const SizedBox(width: 24),
+                      _buildNavButton(context, 'About', '/about'),
                     ],
                   ),
-                ],
-              ),
+                ),
+
+              // Right side icons - Only show on desktop
+              if (!isMobile)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () {
+                        SearchOverlay.show(
+                          context,
+                          onSelect: (query) {
+                            Navigator.pushNamed(context, '/product',
+                                arguments: {'query': query});
+                          },
+                        );
+                      },
+                      iconSize: 24,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.person_outline),
+                      onPressed: () => Navigator.pushNamed(context, '/auth'),
+                      iconSize: 24,
+                    ),
+                    Stack(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.shopping_bag_outlined),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/cart'),
+                          iconSize: 24,
+                        ),
+                        if (cartProvider.itemCount > 0)
+                          Positioned(
+                            right: 4,
+                            top: 4,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              child: Text(
+                                '${cartProvider.itemCount}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
@@ -200,8 +217,13 @@ class HeaderWidget extends StatelessWidget {
   }
 
   void _showMobileMenu(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
     showModalBottomSheet(
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
       builder: (context) => Container(
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Column(
@@ -230,6 +252,72 @@ class HeaderWidget extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/about');
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.search),
+              title: const Text('Search'),
+              onTap: () {
+                Navigator.pop(context);
+                SearchOverlay.show(
+                  context,
+                  onSelect: (query) {
+                    Navigator.pushNamed(context, '/product',
+                        arguments: {'query': query});
+                  },
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person_outline),
+              title: const Text('Account'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/auth');
+              },
+            ),
+            ListTile(
+              leading: Stack(
+                children: [
+                  const Icon(Icons.shopping_bag_outlined),
+                  if (cartProvider.itemCount > 0)
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          '${cartProvider.itemCount}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              title: const Text('Cart'),
+              trailing: cartProvider.itemCount > 0
+                  ? Text(
+                      '${cartProvider.itemCount} items',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    )
+                  : null,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/cart');
               },
             ),
           ],
