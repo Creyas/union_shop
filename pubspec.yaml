@@ -31,5 +31,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/union_logo.jpg
-    - assets/
+    - assets/images/
