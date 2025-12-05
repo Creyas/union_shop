@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
-import '../services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
