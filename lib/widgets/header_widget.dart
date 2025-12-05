@@ -26,7 +26,7 @@ class HeaderWidget extends StatelessWidget {
           if (snapshot.connectionState != ConnectionState.done) {
             return _buildHeader(context, isMobile, false, 'Guest');
           }
-          
+
           return _buildAuthStreamBuilder(context, isMobile);
         },
       );
