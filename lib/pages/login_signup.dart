@@ -18,7 +18,8 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   // Controllers
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
   bool _isLoading = false;
@@ -229,8 +230,9 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                           ),
                           obscureText: _obscurePassword,
                           validator: _validatePassword,
-                          textInputAction:
-                              isLogin ? TextInputAction.done : TextInputAction.next,
+                          textInputAction: isLogin
+                              ? TextInputAction.done
+                              : TextInputAction.next,
                         ),
                         const SizedBox(height: 16),
 
