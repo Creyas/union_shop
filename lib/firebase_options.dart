@@ -27,7 +27,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -42,25 +45,25 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyByO8RaPcfsCJoo2BzSU81MjCHFBUyJyF4',
-    appId: '1:588555793266:web:1d711ec395c5394ff5a3eb',
+    appId: '1:588555793266:web:d230360596811c5bf5a3eb',
     messagingSenderId: '588555793266',
     projectId: 'union-shop-63006',
     authDomain: 'union-shop-63006.firebaseapp.com',
     storageBucket: 'union-shop-63006.firebasestorage.app',
-    measurementId: 'G-4VWKFCKQ11',
+    measurementId: 'G-31B60P5C5P',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAbW8nXNZvEjE_waELINcKxrew2W2VZni8',
-    appId: '1:588555793266:android:dd7494915a4d2f9ff5a3eb',
+    apiKey: 'YOUR_ANDROID_API_KEY',
+    appId: 'YOUR_ANDROID_APP_ID',
     messagingSenderId: '588555793266',
     projectId: 'union-shop-63006',
     storageBucket: 'union-shop-63006.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDOXkcm2nsca3lJwv3zsZIew4wbq4zvUPg',
-    appId: '1:588555793266:ios:d2bc0d889d82c960f5a3eb',
+    apiKey: 'YOUR_IOS_API_KEY',
+    appId: 'YOUR_IOS_APP_ID',
     messagingSenderId: '588555793266',
     projectId: 'union-shop-63006',
     storageBucket: 'union-shop-63006.firebasestorage.app',
@@ -68,21 +71,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDOXkcm2nsca3lJwv3zsZIew4wbq4zvUPg',
-    appId: '1:588555793266:ios:d2bc0d889d82c960f5a3eb',
+    apiKey: 'YOUR_MACOS_API_KEY',
+    appId: 'YOUR_MACOS_APP_ID',
     messagingSenderId: '588555793266',
     projectId: 'union-shop-63006',
     storageBucket: 'union-shop-63006.firebasestorage.app',
     iosBundleId: 'com.example.unionShop',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyByO8RaPcfsCJoo2BzSU81MjCHFBUyJyF4',
-    appId: '1:588555793266:web:df655eeb2173cec1f5a3eb',
-    messagingSenderId: '588555793266',
-    projectId: 'union-shop-63006',
-    authDomain: 'union-shop-63006.firebaseapp.com',
-    storageBucket: 'union-shop-63006.firebasestorage.app',
-    measurementId: 'G-HC45CR6FV9',
   );
 }
