@@ -205,21 +205,21 @@ class CollectionsPage extends StatelessWidget {
     );
   }
 
-  // Helper methods to filter products
-  static List<Product> _getClothesProducts() {
+  // Helper methods to filter products - make them public (remove underscore)
+  static List<Product> getClothesProducts() {
     return ProductsData.allProducts
         .where((p) => ['white-shirt', 'white-hoodie'].contains(p.id))
         .toList();
   }
 
-  static List<Product> _getMerchandiseProducts() {
+  static List<Product> getMerchandiseProducts() {
     return ProductsData.allProducts
         .where((p) =>
             ['calculator', 'backpack', 'flask', 'lanyard'].contains(p.id))
         .toList();
   }
 
-  static List<Product> _getFreshersSaleProducts() {
+  static List<Product> getFreshersSaleProducts() {
     return ProductsData.allProducts
         .where((p) => ['beerpong', 'football', 'dartset'].contains(p.id))
         .toList();
