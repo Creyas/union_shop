@@ -48,3 +48,79 @@ class ProductCard extends StatelessWidget {
               ),
             ),
 
+            // Product Details
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      if (product.hasDiscount) ...[
+                        Text(
+                          product.price,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          product.discountPrice ?? '',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ] else
+                        Text(
+                          product.price,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF4d2963),
+                          ),
+                        ),
+                    ],
+                  ),
+                  if (product.hasDiscount)
+                    Container(
+                      margin: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'SALE',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
