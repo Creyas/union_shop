@@ -46,7 +46,7 @@ class MobileDrawer extends StatelessWidget {
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushNamedAndRemoveUntil(
-                          context, '/', (route) => false);
+                          context, '/home', (route) => false); // Changed from '/' to '/home'
                     },
                   ),
                   ExpansionTile(
