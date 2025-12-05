@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
+import '../data/products_data.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -91,6 +92,38 @@ class CollectionsPage extends StatelessWidget {
                         collectionId: 'winter',
                       ),
                     ],
+                  );
+                },
+              ),
+            ),
+
+            // Products Grid
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  int crossAxisCount = 1;
+                  if (constraints.maxWidth > 900) {
+                    crossAxisCount = 3;
+                  } else if (constraints.maxWidth > 600) {
+                    crossAxisCount = 2;
+                  }
+
+                  return GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 24,
+                    mainAxisSpacing: 24,
+                    childAspectRatio: 0.75,
+                    children: ProductsData.allProducts.map((product) {
+                      return ProductCard(
+                        id: product.id,
+                        title: product.title,
+                        price: product.price,
+                        imageUrl: product.defaultImageUrl,
+                      );
+                    }).toList(),
                   );
                 },
               ),
