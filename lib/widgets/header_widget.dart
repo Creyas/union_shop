@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../providers/cart_provider.dart';
 import '../services/auth_service.dart';
-import 'search_overlay.dart';
 
 class HeaderWidget extends StatelessWidget {
   final bool showBack;
@@ -20,13 +19,11 @@ class HeaderWidget extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // Handle errors gracefully
         if (snapshot.hasError) {
           debugPrint('Firebase Auth Stream error: ${snapshot.error}');
           return _buildHeader(context, isMobile, false, 'Guest');
         }
 
-        // Handle loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildHeader(context, isMobile, false, 'Guest');
         }
@@ -70,7 +67,6 @@ class HeaderWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Logo and Back Button
         Row(
           children: [
             if (showBack)
@@ -85,7 +81,7 @@ class HeaderWidget extends StatelessWidget {
                   Navigator.pushNamed(context, '/');
                 },
                 child: Image.asset(
-                  'images/union_logo.jpg',
+                  'union_logo.jpg',
                   height: 40,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
@@ -103,8 +99,6 @@ class HeaderWidget extends StatelessWidget {
             ),
           ],
         ),
-
-        // Navigation Menu
         Row(
           children: [
             TextButton(
@@ -134,20 +128,9 @@ class HeaderWidget extends StatelessWidget {
             ),
           ],
         ),
-
-        // Icons and User Menu
         Row(
           children: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const SearchOverlay(),
-                );
-              },
-            ),
-            // Shopping cart with badge
+            // Removed search button temporarily
             Stack(
               children: [
                 IconButton(
@@ -216,7 +199,7 @@ class HeaderWidget extends StatelessWidget {
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, '/'),
               child: Image.asset(
-                'images/union_logo.jpg',
+                'union_logo.jpg',
                 height: 32,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
@@ -235,16 +218,7 @@ class HeaderWidget extends StatelessWidget {
         ),
         Row(
           children: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => const SearchOverlay(),
-                );
-              },
-            ),
-            // Shopping cart with badge
+            // Removed search button temporarily
             Stack(
               children: [
                 IconButton(
