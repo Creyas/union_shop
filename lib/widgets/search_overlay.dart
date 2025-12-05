@@ -289,3 +289,47 @@ class _SearchOverlayState extends State<SearchOverlay> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        // Pages Section
+        if (hasPageResults) ...[
+          Row(
+            children: [
+              const Icon(Icons.pages, size: 20, color: Color(0xFF4d2963)),
+              const SizedBox(width: 8),
+              Text(
+                'Pages (${_pageResults.length})',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF4d2963),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ..._pageResults.map((page) => _buildPageResultTile(page)),
+          if (hasProductResults) const SizedBox(height: 24),
+        ],
+
+        // Products Section
+        if (hasProductResults) ...[
+          Row(
+            children: [
+              const Icon(Icons.inventory_2, size: 20, color: Color(0xFF4d2963)),
+              const SizedBox(width: 8),
+              Text(
+                'Products (${_searchResults.length})',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF4d2963),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ..._searchResults.map((product) => _buildProductResultTile(product)),
+        ],
+      ],
+    );
+  }
+
