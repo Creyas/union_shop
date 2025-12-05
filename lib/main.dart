@@ -5,6 +5,7 @@ import '../providers/cart_provider.dart';
 import '../services/auth_service.dart';
 import 'search_overlay.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import '../widgets/mobile_drawer.dart';
 
 class HeaderWidget extends StatelessWidget {
   final bool showBack;
@@ -555,7 +556,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       // Add endDrawer for mobile menu
-      endDrawer: _buildMobileDrawer(context),
+      endDrawer: const MobileDrawer(),
     );
   }
 
