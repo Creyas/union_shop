@@ -9,6 +9,7 @@ import 'pages/collections.dart';
 import 'dart:async';
 import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
+import 'data/products_data.dart';
 
 void main() {
   runApp(const UnionShopApp());
@@ -113,32 +114,14 @@ class HomeScreen extends StatelessWidget {
                           crossAxisSpacing: 20,
                           mainAxisSpacing: 20,
                           childAspectRatio: childAspectRatio,
-                          children: [
-                            ProductCard(
-                              id: 'white-shirt',
-                              title: 'Essential T-Shirt',
-                              price: '£6.99',
-                              imageUrl: 'assets/images/white_shirt1.jpg',
-                            ),
-                            ProductCard(
-                              id: 'white-hoodie',
-                              title: 'Classic Hoodie',
-                              price: '£25.00',
-                              imageUrl: 'assets/images/white_hoodie1.jpg',
-                            ),
-                            ProductCard(
-                              id: 'black-hoodie',
-                              title: 'Black Hoodie',
-                              price: '£25.00',
-                              imageUrl: 'assets/images/black_hoodie1.jpg',
-                            ),
-                            ProductCard(
-                              id: 'black-shirt',
-                              title: 'Black T-Shirt',
-                              price: '£15.00',
-                              imageUrl: 'assets/images/black_shirt1.jpg',
-                            ),
-                          ],
+                          children: ProductsData.allProducts.map((product) {
+                            return ProductCard(
+                              id: product.id,
+                              title: product.title,
+                              price: product.price,
+                              imageUrl: product.defaultImageUrl,
+                            );
+                          }).toList(),
                         );
                       },
                     ),
