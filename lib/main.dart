@@ -19,18 +19,7 @@ import 'widgets/mobile_drawer.dart';
 import 'data/products_data.dart';
 import 'pages/profile_page.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    print('✅ Firebase initialized successfully');
-  } catch (e) {
-    print('⚠️ Firebase initialization error: $e');
-  }
-
+void main() {
   runApp(const UnionShopApp());
 }
 
@@ -49,9 +38,9 @@ class UnionShopApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
         ),
-        initialRoute: '/',
+        home: const FirebaseInitializer(),
         routes: {
-          '/': (context) => const HomePage(),
+          '/home': (context) => const HomePage(),
           '/product': (context) => const ProductPage(),
           '/about': (context) => const AboutPage(),
           '/auth': (context) => const LoginSignupPage(),
@@ -63,6 +52,88 @@ class UnionShopApp extends StatelessWidget {
           '/profile': (context) => const ProfilePage(),
         },
       ),
+    );
+  }
+}
+
+class FirebaseInitializer extends StatefulWidget {
+  const FirebaseInitializer({super.key});
+
+  @override
+  State<FirebaseInitializer> createState() => _FirebaseInitializerState();
+}
+
+class _FirebaseInitializerState extends State<FirebaseInitializer> {
+  Future<FirebaseApp>? _initialization;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialization = Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Error initializing Firebase: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _initialization = Firebase.initializeApp(
+                          options: DefaultFirebaseOptions.currentPlatform,
+                        );
+                      });
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          debugPrint('✅ Firebase initialized successfully');
+          return const HomePage();
+        }
+
+        // Otherwise, show loading indicator
+        return const Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF4d2963)),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Loading Union Shop...',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
