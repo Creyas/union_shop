@@ -199,7 +199,7 @@ class HeaderWidget extends StatelessWidget {
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, '/'),
               child: Image.asset(
-                'union_logo.jpg',
+                'images/union_logo.jpg',
                 height: 32,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
