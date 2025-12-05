@@ -20,13 +20,13 @@ class CollectionDetailPage extends StatelessWidget {
     List<Product> products = [];
     switch (category) {
       case 'clothes':
-        products = CollectionsPage._getClothesProducts();
+        products = CollectionsPage.getClothesProducts();
         break;
       case 'merchandise':
-        products = CollectionsPage._getMerchandiseProducts();
+        products = CollectionsPage.getMerchandiseProducts();
         break;
       case 'freshers':
-        products = CollectionsPage._getFreshersSaleProducts();
+        products = CollectionsPage.getFreshersSaleProducts();
         break;
       default:
         products = ProductsData.allProducts;
