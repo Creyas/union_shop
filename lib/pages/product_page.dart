@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/header_widget.dart';
-import '../widgets/footer_widget.dart';
 import '../providers/cart_provider.dart';
 import '../models/cart_item.dart';
+import '../widgets/header_widget.dart';
+import '../widgets/footer_widget.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -13,28 +13,22 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  String selectedColor = 'Light Blue';
+  String selectedColor = 'White';
   String selectedSize = 'M';
   int quantity = 1;
+  int selectedImageIndex = 0;
 
-  final List<String> colors = [
-    'Light Blue',
-    'Forest Green',
-    'Purple',
-    'Grey',
-    'Black'
-  ];
-  final List<String> sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
-
-  void navigateToHome(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  // Available product images (you can add more variants)
+  List<String> getProductImages(String baseImage) {
+    // For now, just show the same image twice as placeholders
+    // You can add actual variant images later
+    return [baseImage, baseImage];
   }
 
   void addToCart(BuildContext context, String productId, String productTitle,
       String productPrice, String productImage) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
-    // Parse the price string (remove £ symbol and convert to double)
     final price = double.parse(productPrice.replaceAll('£', ''));
 
     final cartItem = CartItem(
@@ -57,13 +51,8 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  void placeholderCallbackForButtons() {
-    // This is the event handler for buttons that don't work yet
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Get product data from navigation arguments
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
@@ -72,6 +61,9 @@ class _ProductPageState extends State<ProductPage> {
     final productImage = args?['imageUrl'] ?? 'assets/images/white_shirt1.jpg';
     final productId = args?['id'] ?? 'default';
 
+    final productImages = getProductImages(productImage);
+    final isDesktop = MediaQuery.of(context).size.width > 900;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -79,311 +71,367 @@ class _ProductPageState extends State<ProductPage> {
             const HeaderWidget(
               showBack: true,
             ),
-
-            Container(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Main product image
-                  Container(
-                    height: 400,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Image.asset(
-                      productImage,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(Icons.image, size: 100),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Thumbnail images
-                  Row(
-                    children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey[300]!),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Image.asset(
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1400),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: isDesktop
+                      ? _buildDesktopLayout(
+                          productImages,
+                          productTitle,
+                          productPrice,
+                          productId,
                           productImage,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(Icons.image, size: 30),
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Colors.grey[800]!, width: 2),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Image.asset(
+                          context,
+                        )
+                      : _buildMobileLayout(
+                          productImages,
+                          productTitle,
+                          productPrice,
+                          productId,
                           productImage,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(Icons.image, size: 30),
-                            );
-                          },
+                          context,
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Product title
-                  Text(
-                    productTitle,
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Price
-                  Row(
-                    children: [
-                      Text(
-                        '£10.00',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.grey[600],
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        productPrice,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Tax included text
-                  Text(
-                    'Tax included.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Color, Size, and Quantity in a row
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Color selector
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Color',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              height: 40,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: DropdownButton<String>(
-                                value: selectedColor,
-                                isExpanded: true,
-                                underline: const SizedBox(),
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black),
-                                items: colors.map((String color) {
-                                  return DropdownMenuItem<String>(
-                                    value: color,
-                                    child: Text(color),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  if (newValue != null) {
-                                    setState(() {
-                                      selectedColor = newValue;
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Size selector
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Size',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              height: 40,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: DropdownButton<String>(
-                                value: selectedSize,
-                                isExpanded: true,
-                                underline: const SizedBox(),
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black),
-                                items: sizes.map((String size) {
-                                  return DropdownMenuItem<String>(
-                                    value: size,
-                                    child: Text(size),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  if (newValue != null) {
-                                    setState(() {
-                                      selectedSize = newValue;
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      // Quantity selector
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Quantity',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              height: 40,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: DropdownButton<String>(
-                                value: quantity.toString(),
-                                isExpanded: true,
-                                underline: const SizedBox(),
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.black),
-                                items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-                                    .map((int value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value.toString(),
-                                    child: Text(value.toString()),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  if (newValue != null) {
-                                    setState(() {
-                                      quantity = int.parse(newValue);
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // ADD TO CART button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 44,
-                    child: ElevatedButton(
-                      onPressed: () => addToCart(context, productId,
-                          productTitle, productPrice, productImage),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        side: const BorderSide(color: Colors.black, width: 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                      child: const Text(
-                        'ADD TO CART',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Product description moved here
-                  const Text(
-                    'Redesigned with a fresh chest logo, our Essential T-shirts are made for everyday wear with a modern twist. Soft, durable, and effortlessly versatile — these are the elevated basics your wardrobe\'s been waiting for.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                      height: 1.6,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
+                ),
               ),
             ),
-
-            // Footer
-            const FooterWidget(),
+            const SizedBox(height: 40),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildDesktopLayout(
+    List<String> productImages,
+    String productTitle,
+    String productPrice,
+    String productId,
+    String productImage,
+    BuildContext context,
+  ) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Left side - Thumbnails
+        Column(
+          children: List.generate(
+            productImages.length,
+            (index) => GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedImageIndex = index;
+                });
+              },
+              child: Container(
+                width: 80,
+                height: 80,
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: selectedImageIndex == index
+                        ? const Color(0xFF4d2963)
+                        : Colors.grey[300]!,
+                    width: selectedImageIndex == index ? 2 : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.asset(
+                    productImages[index],
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        // Center - Main Image
+        Expanded(
+          flex: 2,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              productImages[selectedImageIndex],
+              width: double.infinity,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 600,
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(Icons.image_not_supported, size: 50),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        const SizedBox(width: 40),
+        // Right side - Product details and buttons
+        Expanded(
+          flex: 1,
+          child: _buildProductDetails(
+            productTitle,
+            productPrice,
+            productId,
+            productImage,
+            context,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileLayout(
+    List<String> productImages,
+    String productTitle,
+    String productPrice,
+    String productId,
+    String productImage,
+    BuildContext context,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Main Image
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.asset(
+            productImages[selectedImageIndex],
+            width: double.infinity,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                height: 400,
+                color: Colors.grey[300],
+                child: const Center(
+                  child: Icon(Icons.image_not_supported, size: 50),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Thumbnails
+        Row(
+          children: List.generate(
+            productImages.length,
+            (index) => GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedImageIndex = index;
+                });
+              },
+              child: Container(
+                width: 60,
+                height: 60,
+                margin: const EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: selectedImageIndex == index
+                        ? const Color(0xFF4d2963)
+                        : Colors.grey[300]!,
+                    width: selectedImageIndex == index ? 2 : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.asset(
+                    productImages[index],
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        // Product details
+        _buildProductDetails(
+          productTitle,
+          productPrice,
+          productId,
+          productImage,
+          context,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductDetails(
+    String productTitle,
+    String productPrice,
+    String productId,
+    String productImage,
+    BuildContext context,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          productTitle,
+          style: const TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          productPrice,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF4d2963),
+          ),
+        ),
+        const SizedBox(height: 24),
+        const Text(
+          'Color',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: ['White', 'Black', 'Grey'].map((color) {
+            return ChoiceChip(
+              label: Text(color),
+              selected: selectedColor == color,
+              onSelected: (selected) {
+                setState(() {
+                  selectedColor = color;
+                });
+              },
+              selectedColor: const Color(0xFF4d2963),
+              labelStyle: TextStyle(
+                color: selectedColor == color ? Colors.white : Colors.black,
+              ),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 24),
+        const Text(
+          'Size',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) {
+            return ChoiceChip(
+              label: Text(size),
+              selected: selectedSize == size,
+              onSelected: (selected) {
+                setState(() {
+                  selectedSize = size;
+                });
+              },
+              selectedColor: const Color(0xFF4d2963),
+              labelStyle: TextStyle(
+                color: selectedSize == size ? Colors.white : Colors.black,
+              ),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 24),
+        const Text(
+          'Quantity',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.remove),
+              onPressed: () {
+                if (quantity > 1) {
+                  setState(() {
+                    quantity--;
+                  });
+                }
+              },
+              style: IconButton.styleFrom(
+                side: BorderSide(color: Colors.grey[300]!),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                '$quantity',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                setState(() {
+                  quantity++;
+                });
+              },
+              style: IconButton.styleFrom(
+                side: BorderSide(color: Colors.grey[300]!),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () => addToCart(
+                context, productId, productTitle, productPrice, productImage),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4d2963),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'ADD TO CART',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
+        const Text(
+          'Product Description',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'High-quality comfortable clothing perfect for everyday wear. Made from premium materials with attention to detail.',
+          style: TextStyle(
+            fontSize: 14,
+            height: 1.6,
+            color: Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 }
