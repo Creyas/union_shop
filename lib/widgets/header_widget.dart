@@ -239,8 +239,13 @@ class HeaderWidget extends StatelessWidget {
       ),
       itemBuilder: (BuildContext context) => [
         const PopupMenuItem<String>(
+          value: 'all',
+          child: Text('All Products'),
+        ),
+        const PopupMenuDivider(),
+        const PopupMenuItem<String>(
           value: 'collections',
-          child: Text('All Collections'),
+          child: Text('Collections'),
         ),
         const PopupMenuItem<String>(
           value: 'clothes',
@@ -256,7 +261,9 @@ class HeaderWidget extends StatelessWidget {
         ),
       ],
       onSelected: (String value) {
-        if (value == 'collections') {
+        if (value == 'all') {
+          Navigator.pushNamed(context, '/all-products');
+        } else if (value == 'collections') {
           Navigator.pushNamed(context, '/collections');
         } else {
           Navigator.pushNamed(
@@ -303,7 +310,15 @@ class HeaderWidget extends StatelessWidget {
               title: const Text('Shop'),
               children: [
                 ListTile(
-                  title: const Text('  All Collections'),
+                  title: const Text('  All Products'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/all-products');
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text('  Collections'),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/collections');
