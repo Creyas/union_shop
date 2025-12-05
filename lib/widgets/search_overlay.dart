@@ -11,169 +11,84 @@ class SearchOverlay extends StatefulWidget {
 class _SearchOverlayState extends State<SearchOverlay> {
   final TextEditingController _searchController = TextEditingController();
   List<Product> _searchResults = [];
+  List<Map<String, dynamic>> _pageResults = [];
+  bool _isSearching = false;
 
-  void _performSearch(String query) {
-    if (query.isEmpty) {
-      setState(() {
-        _searchResults = [];
-      });
-      return;
-    }
+  // Define searchable pages
+  final List<Map<String, dynamic>> _pages = [
+    {
+      'title': 'Home',
+      'description': 'Return to homepage',
+      'route': '/',
+      'icon': Icons.home,
+      'keywords': ['home', 'main', 'start'],
+    },
+    {
+      'title': 'All Products',
+      'description': 'Browse all available products with filters',
+      'route': '/all-products',
+      'icon': Icons.shopping_bag,
+      'keywords': ['all', 'products', 'shop', 'browse', 'filter', 'sort'],
+    },
+    {
+      'title': 'Print Shack',
+      'description': 'Customize your own hoodie with personalization',
+      'route': '/print-shack',
+      'icon': Icons.print,
+      'keywords': ['print', 'custom', 'personalize', 'hoodie', 'customize', 'text', 'name'],
+    },
+    {
+      'title': 'Collections',
+      'description': 'Browse product collections',
+      'route': '/collections',
+      'icon': Icons.collections,
+      'keywords': ['collections', 'categories', 'browse'],
+    },
+    {
+      'title': 'Clothes',
+      'description': 'T-Shirts and Hoodies',
+      'route': '/collection-detail',
+      'arguments': {'category': 'clothes', 'title': 'Clothes'},
+      'icon': Icons.checkroom,
+      'keywords': ['clothes', 'clothing', 'apparel', 'shirts', 'hoodies', 'wear'],
+    },
+    {
+      'title': 'Merchandise',
+      'description': 'Accessories and more',
+      'route': '/collection-detail',
+      'arguments': {'category': 'merchandise', 'title': 'Merchandise'},
+      'icon': Icons.shopping_basket,
+      'keywords': ['merchandise', 'accessories', 'items', 'stuff', 'gear'],
+    },
+    {
+      'title': 'Freshers Sale',
+      'description': 'Special offers - 25% OFF selected items',
+      'route': '/collection-detail',
+      'arguments': {'category': 'freshers', 'title': 'Freshers Sale'},
+      'icon': Icons.local_offer,
+      'keywords': ['sale', 'freshers', 'discount', 'offer', 'deals', 'cheap', 'savings'],
+    },
+    {
+      'title': 'About',
+      'description': 'Learn more about The Union Shop',
+      'route': '/about',
+      'icon': Icons.info,
+      'keywords': ['about', 'information', 'contact', 'us'],
+    },
+    {
+      'title': 'Cart',
+      'description': 'View your shopping cart',
+      'route': '/cart',
+      'icon': Icons.shopping_cart,
+      'keywords': ['cart', 'basket', 'checkout', 'bag', 'purchase'],
+    },
+    {
+      'title': 'Account',
+      'description': 'Login or Sign up',
+      'route': '/auth',
+      'icon': Icons.person,
+      'keywords': ['account', 'login', 'signup', 'register', 'profile', 'user'],
+    },
+  ];
 
-    setState(() {
-      _searchResults = ProductsData.allProducts
-          .where((product) =>
-              product.title.toLowerCase().contains(query.toLowerCase()) ||
-              product.description.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 600, maxHeight: 500),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            // Search Header
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF4d2963),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.search, color: Colors.white),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      autofocus: true,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        hintText: 'Search products...',
-                        hintStyle: TextStyle(color: Colors.white70),
-                        border: InputBorder.none,
-                      ),
-                      onChanged: _performSearch,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-            ),
-
-            // Search Results
-            Expanded(
-              child: _searchController.text.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.search, size: 64, color: Colors.grey[300]),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Start typing to search',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : _searchResults.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.search_off,
-                                  size: 64, color: Colors.grey[300]),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No products found',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _searchResults.length,
-                          itemBuilder: (context, index) {
-                            final product = _searchResults[index];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              child: ListTile(
-                                leading: ClipRRect(
-                                  borderRadius: BorderRadius.circular(4),
-                                  child: Image.asset(
-                                    product.defaultImageUrl,
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        width: 50,
-                                        height: 50,
-                                        color: Colors.grey[300],
-                                        child: const Icon(Icons.image),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                title: Text(
-                                  product.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Text(product.price),
-                                trailing: const Icon(Icons.arrow_forward_ios,
-                                    size: 16),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/product',
-                                    arguments: {
-                                      'id': product.id,
-                                      'title': product.title,
-                                      'price': product.price,
-                                      'imageUrl': product.defaultImageUrl,
-                                    },
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-}
+ 
