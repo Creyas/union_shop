@@ -47,7 +47,7 @@ class _AuthPageState extends State<AuthPage> {
     try {
       if (isLogin) {
         // Login
-        final user = await _authService.login(
+        final user = await _authService.signInWithEmail(
           _emailController.text.trim(),
           _passwordController.text,
         );
@@ -65,10 +65,10 @@ class _AuthPageState extends State<AuthPage> {
         }
       } else {
         // Sign Up
-        final user = await _authService.createAccount(
-          name: _nameController.text.trim(),
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
+        final user = await _authService.signUpWithEmail(
+          _emailController.text.trim(),
+          _passwordController.text,
+          _nameController.text.trim(),
         );
 
         if (user != null) {
