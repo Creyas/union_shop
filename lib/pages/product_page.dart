@@ -172,6 +172,9 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _buildProductDetails(Product product, BuildContext context) {
+    // Check if product has multiple colors
+    final hasMultipleColors = product.colorImages.length > 1;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -203,17 +206,27 @@ class _ProductPageState extends State<ProductPage> {
         Wrap(
           spacing: 8,
           children: product.colorImages.keys.map((color) {
+            final isSelected = selectedColor == color;
+            final isEnabled = hasMultipleColors;
+
             return ChoiceChip(
               label: Text(color),
-              selected: selectedColor == color,
-              onSelected: (selected) {
-                setState(() {
-                  selectedColor = color;
-                });
-              },
-              selectedColor: const Color(0xFF4d2963),
+              selected: isSelected,
+              onSelected: isEnabled
+                  ? (selected) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    }
+                  : null,
+              selectedColor:
+                  isEnabled ? const Color(0xFF4d2963) : Colors.grey[400],
+              backgroundColor: isEnabled ? null : Colors.grey[300],
+              disabledColor: Colors.grey[300],
               labelStyle: TextStyle(
-                color: selectedColor == color ? Colors.white : Colors.black,
+                color: isEnabled
+                    ? (isSelected ? Colors.white : Colors.black)
+                    : Colors.grey[600],
               ),
             );
           }).toList(),
