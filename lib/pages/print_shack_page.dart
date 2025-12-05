@@ -216,4 +216,81 @@ class _PrintShackPageState extends State<PrintShackPage> {
     );
   }
 
-  
+  Widget _buildCustomizationPanel() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Personalisation',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Text(
+              '£${totalPrice.toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF4d2963),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Base: £${basePrice.toStringAsFixed(2)} + Print: £${personalizationPrice.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[700],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Tax included.',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // Color Selection
+        const Text(
+          'Color',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: colorImages.keys.map((color) {
+            return ChoiceChip(
+              label: Text(color),
+              selected: selectedColor == color,
+              onSelected: (selected) {
+                setState(() {
+                  selectedColor = color;
+                });
+              },
+              selectedColor: const Color(0xFF4d2963),
+              labelStyle: TextStyle(
+                color: selectedColor == color ? Colors.white : Colors.black,
+              ),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 24),
+
