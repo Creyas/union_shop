@@ -141,7 +141,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class ProductCard extends StatefulWidget {
+class ProductCard extends StatelessWidget {
   final String id;
   final String title;
   final String price;
@@ -156,17 +156,11 @@ class ProductCard extends StatefulWidget {
   });
 
   @override
-  State<ProductCard> createState() => _ProductCardState();
-}
-
-class _ProductCardState extends State<ProductCard> {
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
+    final product = ProductsData.getProductById(id);
+    final hasDiscount = product?.hasDiscount ?? false;
+
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
@@ -174,67 +168,125 @@ class _ProductCardState extends State<ProductCard> {
             context,
             '/product',
             arguments: {
-              'id': widget.id,
-              'title': widget.title,
-              'price': widget.price,
-              'imageUrl': widget.imageUrl,
+              'id': id,
+              'title': title,
+              'price': price,
+              'imageUrl': imageUrl,
             },
           );
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[300]!),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
                 child: Stack(
-                  fit: StackFit.expand,
                   children: [
-                    Image.asset(
-                      widget.imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Icon(Icons.image_not_supported,
-                                color: Colors.grey),
-                          ),
-                        );
-                      },
-                    ),
-                    // Grey overlay when hovered
-                    AnimatedOpacity(
-                      duration: const Duration(milliseconds: 200),
-                      opacity: _isHovered ? 0.3 : 0.0,
-                      child: Container(
-                        color: Colors.grey,
+                    ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
+                      ),
+                      child: Image.asset(
+                        imageUrl,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                size: 50,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
+                    // Discount Badge
+                    if (hasDiscount)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '${product!.discountPercentage!.toInt()}% OFF',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.title,
-                    style: const TextStyle(fontSize: 14, color: Colors.black),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    widget.price,
-                    style: const TextStyle(fontSize: 13, color: Colors.grey),
-                  ),
-                ],
+              Container(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    if (hasDiscount) ...[
+                      Row(
+                        children: [
+                          Text(
+                            price,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            product!.discountedPrice,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ] else
+                      Text(
+                        price,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF4d2963),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
