@@ -325,6 +325,15 @@ class HeaderWidget extends StatelessWidget {
                 ),
                 const Divider(),
                 ListTile(
+                  title: const Text('  Print Shack'),
+                  leading: const Icon(Icons.print, size: 20),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/print-shack');
+                  },
+                ),
+                const Divider(),
+                ListTile(
                   title: const Text('  Collections'),
                   onTap: () {
                     Navigator.pop(context);
