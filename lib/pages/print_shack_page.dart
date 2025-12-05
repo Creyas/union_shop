@@ -143,3 +143,77 @@ class _PrintShackPageState extends State<PrintShackPage> {
       ],
     );
   }
+
+  Widget _buildMobileLayout(bool isMobile) {
+    return Column(
+      children: [
+        _buildProductImage(),
+        const SizedBox(height: 24),
+        _buildCustomizationPanel(),
+      ],
+    );
+  }
+
+  Widget _buildProductImage() {
+    return Column(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.asset(
+            colorImages[selectedColor]!,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                height: 400,
+                color: Colors.grey[300],
+                child: const Center(
+                  child: Icon(Icons.image, size: 100),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Color thumbnails
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: colorImages.keys.map((color) {
+            final isSelected = selectedColor == color;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedColor = color;
+                  });
+                },
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFF4d2963)
+                          : Colors.grey[300]!,
+                      width: isSelected ? 3 : 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.asset(
+                      colorImages[color]!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  
