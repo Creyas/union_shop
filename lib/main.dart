@@ -14,7 +14,8 @@ import 'pages/print_shack_page.dart';
 import 'dart:async';
 import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
-import 'widgets/product_card.dart'; // Add this import
+import 'widgets/product_card.dart';
+import 'widgets/mobile_drawer.dart'; // Add this line
 import 'data/products_data.dart';
 import 'pages/profile_page.dart';
 
