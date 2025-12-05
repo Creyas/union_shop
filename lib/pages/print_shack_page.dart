@@ -4,6 +4,7 @@ import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../providers/cart_provider.dart';
 import '../models/cart_item.dart';
+import '../widgets/mobile_drawer.dart';
 
 class PrintShackPage extends StatefulWidget {
   const PrintShackPage({super.key});
@@ -126,6 +127,7 @@ class _PrintShackPageState extends State<PrintShackPage> {
           ],
         ),
       ),
+      drawer: isMobile ? const MobileDrawer() : null,
     );
   }
 
