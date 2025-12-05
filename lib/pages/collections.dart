@@ -214,23 +214,14 @@ class CollectionsPage extends StatelessWidget {
 
   static List<Product> _getMerchandiseProducts() {
     return ProductsData.allProducts
-        .where((p) => [
-              'flask',
-              'lanyard',
-              'backpack',
-              'beerpong',
-              'calculator',
-              'dartset',
-              'football'
-            ].contains(p.id))
+        .where((p) =>
+            ['calculator', 'backpack', 'flask', 'lanyard'].contains(p.id))
         .toList();
   }
 
   static List<Product> _getFreshersSaleProducts() {
-    // You can customize which products are on sale
     return ProductsData.allProducts
-        .where((p) =>
-            ['white-shirt', 'lanyard', 'flask', 'calculator'].contains(p.id))
+        .where((p) => ['beerpong', 'football', 'dartset'].contains(p.id))
         .toList();
   }
 }
