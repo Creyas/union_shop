@@ -19,10 +19,13 @@ class _ProductPageState extends State<ProductPage> {
   int selectedImageIndex = 0;
 
   // Available product images (you can add more variants)
-  List<String> getProductImages(String baseImage) {
-    // For now, just show the same image twice as placeholders
-    // You can add actual variant images later
-    return [baseImage, baseImage];
+  List<String> getProductImages(String? baseImage) {
+    // If baseImage is null or empty, use a default
+    final image = baseImage ?? 'assets/images/white_shirt1.jpg';
+
+    // Return multiple images if available, otherwise just the main image
+    // For now, we'll just show the main image once
+    return [image];
   }
 
   void addToCart(BuildContext context, String productId, String productTitle,
@@ -97,6 +100,7 @@ class _ProductPageState extends State<ProductPage> {
               ),
             ),
             const SizedBox(height: 40),
+            const FooterWidget(),
           ],
         ),
       ),
@@ -114,59 +118,71 @@ class _ProductPageState extends State<ProductPage> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left side - Thumbnails
-        Column(
-          children: List.generate(
-            productImages.length,
-            (index) => GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedImageIndex = index;
-                });
-              },
-              child: Container(
-                width: 80,
-                height: 80,
-                margin: const EdgeInsets.only(bottom: 8),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: selectedImageIndex == index
-                        ? const Color(0xFF4d2963)
-                        : Colors.grey[300]!,
-                    width: selectedImageIndex == index ? 2 : 1,
+        // Left side - Thumbnails (only show if multiple images)
+        if (productImages.length > 1)
+          Column(
+            children: List.generate(
+              productImages.length,
+              (index) => GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedImageIndex = index;
+                  });
+                },
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: selectedImageIndex == index
+                          ? const Color(0xFF4d2963)
+                          : Colors.grey[300]!,
+                      width: selectedImageIndex == index ? 2 : 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.asset(
-                    productImages[index],
-                    fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.asset(
+                      productImages[index],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.image_not_supported),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 16),
-        // Center - Main Image
+        if (productImages.length > 1) const SizedBox(width: 16),
+        // Center - Main Image (smaller)
         Expanded(
-          flex: 2,
+          flex: 1,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              productImages[selectedImageIndex],
-              width: double.infinity,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 600,
-                  color: Colors.grey[300],
-                  child: const Center(
-                    child: Icon(Icons.image_not_supported, size: 50),
-                  ),
-                );
-              },
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 500),
+              child: Image.asset(
+                productImages[selectedImageIndex < productImages.length
+                    ? selectedImageIndex
+                    : 0],
+                width: double.infinity,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 500,
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Icon(Icons.image_not_supported, size: 50),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -197,60 +213,73 @@ class _ProductPageState extends State<ProductPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Main Image
+        // Main Image (smaller on mobile)
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Image.asset(
-            productImages[selectedImageIndex],
-            width: double.infinity,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                height: 400,
-                color: Colors.grey[300],
-                child: const Center(
-                  child: Icon(Icons.image_not_supported, size: 50),
-                ),
-              );
-            },
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 400),
+            child: Image.asset(
+              productImages[selectedImageIndex < productImages.length
+                  ? selectedImageIndex
+                  : 0],
+              width: double.infinity,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 400,
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(Icons.image_not_supported, size: 50),
+                  ),
+                );
+              },
+            ),
           ),
         ),
         const SizedBox(height: 16),
-        // Thumbnails
-        Row(
-          children: List.generate(
-            productImages.length,
-            (index) => GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedImageIndex = index;
-                });
-              },
-              child: Container(
-                width: 60,
-                height: 60,
-                margin: const EdgeInsets.only(right: 8),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: selectedImageIndex == index
-                        ? const Color(0xFF4d2963)
-                        : Colors.grey[300]!,
-                    width: selectedImageIndex == index ? 2 : 1,
+        // Thumbnails (only show if multiple images)
+        if (productImages.length > 1)
+          Row(
+            children: List.generate(
+              productImages.length,
+              (index) => GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedImageIndex = index;
+                  });
+                },
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  margin: const EdgeInsets.only(right: 8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: selectedImageIndex == index
+                          ? const Color(0xFF4d2963)
+                          : Colors.grey[300]!,
+                      width: selectedImageIndex == index ? 2 : 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.asset(
-                    productImages[index],
-                    fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.asset(
+                      productImages[index],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child:
+                              const Icon(Icons.image_not_supported, size: 20),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 24),
+        if (productImages.length > 1) const SizedBox(height: 24),
         // Product details
         _buildProductDetails(
           productTitle,
