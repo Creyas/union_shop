@@ -2,19 +2,19 @@ class CartItem {
   final String id;
   final String name;
   final double price;
-  final String color;
-  final String size;
-  final int quantity;
   final String imageUrl;
+  int quantity;
+  final String? size; // Add this line
+  final String? color; // Add this line
 
   CartItem({
     required this.id,
     required this.name,
     required this.price,
-    required this.color,
-    required this.size,
-    required this.quantity,
     required this.imageUrl,
+    required this.quantity,
+    this.size, // Add this line
+    this.color, // Add this line
   });
 
   double get total => price * quantity;
