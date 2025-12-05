@@ -30,8 +30,7 @@ class ProductsData {
         'Black': 'assets/images/black_shirt1.jpg',
       },
       hasSize: true,
-      description:
-          'High-quality comfortable t-shirt perfect for everyday wear. Made from premium materials with attention to detail.',
+      description: 'High-quality comfortable t-shirt perfect for everyday wear. Made from premium materials with attention to detail.',
     ),
     Product(
       id: 'white-hoodie',
@@ -43,8 +42,7 @@ class ProductsData {
         'Black': 'assets/images/black_hoodie1.jpg',
       },
       hasSize: true,
-      description:
-          'Comfortable and warm hoodie perfect for casual wear. Features a cozy hood and front pocket.',
+      description: 'Comfortable and warm hoodie perfect for casual wear. Features a cozy hood and front pocket.',
     ),
     Product(
       id: 'black-hoodie',
@@ -56,8 +54,7 @@ class ProductsData {
         'Black': 'assets/images/black_hoodie1.jpg',
       },
       hasSize: true,
-      description:
-          'Comfortable and warm hoodie perfect for casual wear. Features a cozy hood and front pocket.',
+      description: 'Comfortable and warm hoodie perfect for casual wear. Features a cozy hood and front pocket.',
     ),
     Product(
       id: 'lanyard',
@@ -69,8 +66,7 @@ class ProductsData {
         'Black': 'assets/images/black_lanyard.jpg',
       },
       hasSize: false,
-      description:
-          'High-quality University of Portsmouth lanyard. Perfect for holding your student ID card and keys. Durable and stylish.',
+      description: 'High-quality University of Portsmouth lanyard. Perfect for holding your student ID card and keys. Durable and stylish.',
     ),
   ];
 
