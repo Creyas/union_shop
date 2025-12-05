@@ -18,20 +18,19 @@ import 'pages/profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Firebase for web with explicit options
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "AIzaSyByO8RaPcfsCJoo2BzSU81MjCHFBUyJyF4",
-      authDomain: "union-shop-63006.firebaseapp.com",
-      projectId: "union-shop-63006",
-      storageBucket: "union-shop-63006.firebasestorage.app",
-      messagingSenderId: "588555793266",
-      appId: "1:588555793266:web:d230360596811c5bf5a3eb",
-      measurementId: "G-31B60P5C5P"
-    ),
+        apiKey: "AIzaSyByO8RaPcfsCJoo2BzSU81MjCHFBUyJyF4",
+        authDomain: "union-shop-63006.firebaseapp.com",
+        projectId: "union-shop-63006",
+        storageBucket: "union-shop-63006.firebasestorage.app",
+        messagingSenderId: "588555793266",
+        appId: "1:588555793266:web:d230360596811c5bf5a3eb",
+        measurementId: "G-31B60P5C5P"),
   );
-  
+
   runApp(const UnionShopApp());
 }
 
