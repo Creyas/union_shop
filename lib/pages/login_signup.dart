@@ -46,12 +46,9 @@ class _AuthPageState extends State<AuthPage> {
     return Scaffold(
       body: Column(
         children: [
-          HeaderWidget(
+          const HeaderWidget(
             compact: true,
             showBack: true,
-            onBack: () {
-              if (Navigator.canPop(context)) Navigator.pop(context);
-            },
           ),
           Expanded(
             child: Center(
@@ -144,7 +141,7 @@ class _AuthPageState extends State<AuthPage> {
               ),
             ),
           ),
-          const FooterWidget(compact: true),
+          const FooterWidget(),
         ],
       ),
     );

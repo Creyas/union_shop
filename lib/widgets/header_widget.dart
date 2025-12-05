@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import 'search_overlay.dart';
-import 'pages/login_signup.dart';
 
 class HeaderWidget extends StatelessWidget {
   final bool compact;
@@ -49,8 +48,8 @@ class HeaderWidget extends StatelessWidget {
         // Main Header
         Container(
           padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 12 : 24,
-            vertical: isMobile ? 12 : 16,
+            horizontal: isMobile ? 8 : 24,
+            vertical: isMobile ? 8 : 16,
           ),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -130,8 +129,8 @@ class HeaderWidget extends StatelessWidget {
                         SearchOverlay.show(
                           context,
                           onSelect: (query) {
-                            Navigator.pushNamed(context, '/product',
-                                arguments: {'query': query});
+                            // Handle search - for now just print
+                            debugPrint('Search query: $query');
                           },
                         );
                       },
@@ -263,8 +262,7 @@ class HeaderWidget extends StatelessWidget {
                 SearchOverlay.show(
                   context,
                   onSelect: (query) {
-                    Navigator.pushNamed(context, '/product',
-                        arguments: {'query': query});
+                    debugPrint('Search query: $query');
                   },
                 );
               },
