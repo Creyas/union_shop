@@ -4,6 +4,7 @@ import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
 import '../main.dart';
 import 'collections.dart';
+import '../widgets/mobile_drawer.dart';
 
 class CollectionDetailPage extends StatelessWidget {
   const CollectionDetailPage({super.key});
@@ -33,6 +34,19 @@ class CollectionDetailPage extends StatelessWidget {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Collection'),
+        backgroundColor: Colors.grey[800],
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      drawer: const MobileDrawer(),
+      endDrawer: const MobileDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
