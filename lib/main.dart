@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'providers/cart_provider.dart';
 import 'pages/product_page.dart';
 import 'pages/about.dart';
@@ -13,12 +15,20 @@ import 'dart:async';
 import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
 import 'data/products_data.dart';
-// Comment out or remove Firebase import - not needed since it's in HTML
-// import 'package:firebase_core/firebase_core.dart';
 import 'pages/profile_page.dart';
 
-void main() {
-  // Remove async and Firebase initialization
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('✅ Firebase initialized successfully');
+  } catch (e) {
+    print('⚠️ Firebase initialization error: $e');
+  }
+  
   runApp(const UnionShopApp());
 }
 
@@ -54,10 +64,6 @@ class UnionShopApp extends StatelessWidget {
     );
   }
 }
-
-// Remove the FirebaseInitializer widget entirely
-
-// ...rest of your HomePage and other code...
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
