@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
-import '../main.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -10,7 +9,6 @@ class CollectionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
-    final isTablet = MediaQuery.of(context).size.width < 900;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -40,6 +38,7 @@ class CollectionsPage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: isMobile ? 16.0 : 24.0,
+                vertical: isMobile ? 16.0 : 32.0,
               ),
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -85,60 +84,6 @@ class CollectionsPage extends StatelessWidget {
                     ],
                   );
                 },
-              ),
-            ),
-
-            const SizedBox(height: 48),
-
-            // All Products Section
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 16.0 : 24.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'All Products',
-                    style: TextStyle(
-                      fontSize: isMobile ? 24 : 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      int crossAxisCount = 1;
-                      double childAspectRatio = 0.75;
-
-                      if (constraints.maxWidth > 900) {
-                        crossAxisCount = 3;
-                        childAspectRatio = 0.75;
-                      } else if (constraints.maxWidth > 600) {
-                        crossAxisCount = 2;
-                        childAspectRatio = 0.75;
-                      }
-
-                      return GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: 24,
-                        mainAxisSpacing: 24,
-                        childAspectRatio: childAspectRatio,
-                        children: ProductsData.allProducts.map((product) {
-                          return ProductCard(
-                            id: product.id,
-                            title: product.title,
-                            price: product.price,
-                            imageUrl: product.defaultImageUrl,
-                          );
-                        }).toList(),
-                      );
-                    },
-                  ),
-                ],
               ),
             ),
 
