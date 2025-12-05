@@ -47,96 +47,291 @@ class UnionShopApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  void placeholderCallbackForButtons() {
-    // This is the event handler for buttons that don't work yet
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  Timer? _timer;
+
+  final List<Map<String, String>> _heroSlides = [
+    {
+      'title': 'Welcome to The Union Shop',
+      'subtitle': 'Official University of Portsmouth Merchandise',
+      'description':
+          'Discover exclusive apparel, accessories, and essentials for student life',
+      'image': 'assets/images/white_hoodie1.jpg',
+    },
+    {
+      'title': 'Freshers Sale - 25% OFF',
+      'subtitle': 'Limited Time Offer',
+      'description':
+          'Get amazing discounts on selected items. Perfect for starting your university journey!',
+      'image': 'assets/images/beerpong.jpg',
+    },
+    {
+      'title': 'Quality Merchandise',
+      'subtitle': 'Show Your University Pride',
+      'description':
+          'From hoodies to accessories, find everything you need to represent UoP',
+      'image': 'assets/images/backpack.jpg',
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+      if (_currentPage < _heroSlides.length - 1) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+
+      _pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             const HeaderWidget(),
 
-            // Hero Section (replaced by carousel)
-            HeroCarousel(
-              height: MediaQuery.of(context).size.width < 600 ? 300 : 400,
-              imageUrls: const [
-                'assets/images/black_hoodie1.jpg',
-                'assets/images/white_hoodie1.jpg',
-                'assets/images/white_shirt1.jpg',
-              ],
-              onBrowse: placeholderCallbackForButtons,
-            ),
-
-            // Products Section
-            Container(
-              color: Colors.white,
-              child: Padding(
-                padding: EdgeInsets.all(
-                  MediaQuery.of(context).size.width < 600 ? 16.0 : 40.0,
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'SIGNATURE RANGE',
-                      style: TextStyle(
-                        fontSize:
-                            MediaQuery.of(context).size.width < 600 ? 16 : 20,
-                        color: Colors.black,
-                        letterSpacing: 1,
-                        fontWeight: FontWeight.bold,
+            // Hero Section with Auto-Rotating Carousel
+            SizedBox(
+              height: isMobile ? 400 : 500,
+              child: Stack(
+                children: [
+                  PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
+                    },
+                    itemCount: _heroSlides.length,
+                    itemBuilder: (context, index) {
+                      return _buildHeroSlide(_heroSlides[index], isMobile);
+                    },
+                  ),
+                  // Page Indicators
+                  Positioned(
+                    bottom: 20,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        _heroSlides.length,
+                        (index) => Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          width: _currentPage == index ? 24 : 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: _currentPage == index
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
                       ),
                     ),
-                    SizedBox(
-                        height:
-                            MediaQuery.of(context).size.width < 600 ? 24 : 48),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        int crossAxisCount = 1;
-                        double childAspectRatio = 0.75;
-
-                        if (constraints.maxWidth > 900) {
-                          crossAxisCount = 2;
-                          childAspectRatio = 1.0;
-                        } else if (constraints.maxWidth > 600) {
-                          crossAxisCount = 2;
-                          childAspectRatio = 0.85;
-                        } else {
-                          crossAxisCount = 1;
-                          childAspectRatio = 0.75;
-                        }
-
-                        return GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 20,
-                          childAspectRatio: childAspectRatio,
-                          children: ProductsData.allProducts.map((product) {
-                            return ProductCard(
-                              id: product.id,
-                              title: product.title,
-                              price: product.price,
-                              imageUrl: product.defaultImageUrl,
-                            );
-                          }).toList(),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
 
-            // Footer (reusable)
+            const SizedBox(height: 48),
+
+            // Featured Products Section
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16.0 : 24.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Featured Products',
+                        style: TextStyle(
+                          fontSize: isMobile ? 24 : 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/all-products');
+                        },
+                        child: const Text(
+                          'View All',
+                          style: TextStyle(
+                            color: Color(0xFF4d2963),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      int crossAxisCount = 1;
+                      double childAspectRatio = 0.75;
+
+                      if (constraints.maxWidth > 900) {
+                        crossAxisCount = 4;
+                        childAspectRatio = 0.75;
+                      } else if (constraints.maxWidth > 600) {
+                        crossAxisCount = 2;
+                        childAspectRatio = 0.75;
+                      }
+
+                      return GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 24,
+                        mainAxisSpacing: 24,
+                        childAspectRatio: childAspectRatio,
+                        children:
+                            ProductsData.allProducts.take(4).map((product) {
+                          return ProductCard(
+                            id: product.id,
+                            title: product.title,
+                            price: product.price,
+                            imageUrl: product.defaultImageUrl,
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 48),
             const FooterWidget(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeroSlide(Map<String, String> slide, bool isMobile) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(slide['image']!),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Colors.black.withOpacity(0.7),
+              Colors.transparent,
+            ],
+          ),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1400),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 24.0 : 48.0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    slide['subtitle']!,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: isMobile ? 14 : 16,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    slide['title']!,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: isMobile ? 32 : 56,
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: isMobile ? double.infinity : 500,
+                    child: Text(
+                      slide['description']!,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: isMobile ? 14 : 18,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/all-products');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4d2963),
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 24 : 32,
+                        vertical: isMobile ? 12 : 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      'Browse Products',
+                      style: TextStyle(
+                        fontSize: isMobile ? 14 : 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
