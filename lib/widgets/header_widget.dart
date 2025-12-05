@@ -372,6 +372,16 @@ class HeaderWidget extends StatelessWidget {
           child: Text('Collections'),
         ),
         const PopupMenuItem<String>(
+          value: 'freshers-sale',
+          child: Row(
+            children: [
+              Text('Freshers Sale'),
+              SizedBox(width: 8),
+              Icon(Icons.local_fire_department, color: Colors.red, size: 18),
+            ],
+          ),
+        ),
+        const PopupMenuItem<String>(
           value: 'print-shack',
           child: Text('Print Shack'),
         ),
@@ -381,6 +391,8 @@ class HeaderWidget extends StatelessWidget {
           Navigator.pushNamed(context, '/all-products');
         } else if (value == 'collections') {
           Navigator.pushNamed(context, '/collections');
+        } else if (value == 'freshers-sale') {
+          Navigator.pushNamed(context, '/freshers-sale');
         } else if (value == 'print-shack') {
           Navigator.pushNamed(context, '/print-shack');
         }
