@@ -18,21 +18,42 @@ class _ProductPageState extends State<ProductPage> {
   int quantity = 1;
   int selectedImageIndex = 0;
 
-  // Available product images (you can add more variants)
-  List<String> getProductImages(String? baseImage) {
-    // If baseImage is null or empty, use a default
-    final image = baseImage ?? 'assets/images/white_shirt1.jpg';
+  // Map colors to their corresponding images
+  Map<String, String> getColorImages(String productId) {
+    switch (productId) {
+      case 'white-shirt':
+      case 'black-shirt':
+        return {
+          'White': 'assets/images/white_shirt1.jpg',
+          'Black': 'assets/images/black_shirt1.jpg',
+        };
+      case 'white-hoodie':
+      case 'black-hoodie':
+        return {
+          'White': 'assets/images/white_hoodie1.jpg',
+          'Black': 'assets/images/black_hoodie1.jpg',
+        };
+      default:
+        return {
+          'White': 'assets/images/white_shirt1.jpg',
+          'Black': 'assets/images/black_shirt1.jpg',
+        };
+    }
+  }
 
-    // Return multiple images if available, otherwise just the main image
-    // For now, we'll just show the main image once
-    return [image];
+  // Get current image based on selected color
+  String getCurrentImage(String productId) {
+    final colorImages = getColorImages(productId);
+    return colorImages[selectedColor] ??
+        colorImages['White'] ??
+        'assets/images/white_shirt1.jpg';
   }
 
   void addToCart(BuildContext context, String productId, String productTitle,
-      String productPrice, String productImage) {
+      String productPrice) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
-
     final price = double.parse(productPrice.replaceAll('£', ''));
+    final currentImage = getCurrentImage(productId);
 
     final cartItem = CartItem(
       id: '$productId-${DateTime.now().millisecondsSinceEpoch}',
@@ -41,7 +62,7 @@ class _ProductPageState extends State<ProductPage> {
       color: selectedColor,
       size: selectedSize,
       quantity: quantity,
-      imageUrl: productImage,
+      imageUrl: currentImage,
     );
 
     cartProvider.addItem(cartItem);
@@ -61,11 +82,10 @@ class _ProductPageState extends State<ProductPage> {
 
     final productTitle = args?['title'] ?? 'Essential T-Shirt';
     final productPrice = args?['price'] ?? '£6.99';
-    final productImage = args?['imageUrl'] ?? 'assets/images/white_shirt1.jpg';
     final productId = args?['id'] ?? 'default';
 
-    final productImages = getProductImages(productImage);
     final isDesktop = MediaQuery.of(context).size.width > 900;
+    final currentImage = getCurrentImage(productId);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -81,19 +101,17 @@ class _ProductPageState extends State<ProductPage> {
                   padding: const EdgeInsets.all(24.0),
                   child: isDesktop
                       ? _buildDesktopLayout(
-                          productImages,
+                          currentImage,
                           productTitle,
                           productPrice,
                           productId,
-                          productImage,
                           context,
                         )
                       : _buildMobileLayout(
-                          productImages,
+                          currentImage,
                           productTitle,
                           productPrice,
                           productId,
-                          productImage,
                           context,
                         ),
                 ),
@@ -108,59 +126,16 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _buildDesktopLayout(
-    List<String> productImages,
+    String currentImage,
     String productTitle,
     String productPrice,
     String productId,
-    String productImage,
     BuildContext context,
   ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left side - Thumbnails (only show if multiple images)
-        if (productImages.length > 1)
-          Column(
-            children: List.generate(
-              productImages.length,
-              (index) => GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedImageIndex = index;
-                  });
-                },
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: selectedImageIndex == index
-                          ? const Color(0xFF4d2963)
-                          : Colors.grey[300]!,
-                      width: selectedImageIndex == index ? 2 : 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Image.asset(
-                      productImages[index],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.image_not_supported),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        if (productImages.length > 1) const SizedBox(width: 16),
-        // Center - Main Image (smaller)
+        // Center - Main Image
         Expanded(
           flex: 1,
           child: ClipRRect(
@@ -168,9 +143,7 @@ class _ProductPageState extends State<ProductPage> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 500),
               child: Image.asset(
-                productImages[selectedImageIndex < productImages.length
-                    ? selectedImageIndex
-                    : 0],
+                currentImage,
                 width: double.infinity,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
@@ -194,7 +167,6 @@ class _ProductPageState extends State<ProductPage> {
             productTitle,
             productPrice,
             productId,
-            productImage,
             context,
           ),
         ),
@@ -203,25 +175,22 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget _buildMobileLayout(
-    List<String> productImages,
+    String currentImage,
     String productTitle,
     String productPrice,
     String productId,
-    String productImage,
     BuildContext context,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Main Image (smaller on mobile)
+        // Main Image
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 400),
             child: Image.asset(
-              productImages[selectedImageIndex < productImages.length
-                  ? selectedImageIndex
-                  : 0],
+              currentImage,
               width: double.infinity,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
@@ -236,56 +205,12 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
         ),
-        const SizedBox(height: 16),
-        // Thumbnails (only show if multiple images)
-        if (productImages.length > 1)
-          Row(
-            children: List.generate(
-              productImages.length,
-              (index) => GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedImageIndex = index;
-                  });
-                },
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  margin: const EdgeInsets.only(right: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: selectedImageIndex == index
-                          ? const Color(0xFF4d2963)
-                          : Colors.grey[300]!,
-                      width: selectedImageIndex == index ? 2 : 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Image.asset(
-                      productImages[index],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[300],
-                          child:
-                              const Icon(Icons.image_not_supported, size: 20),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        if (productImages.length > 1) const SizedBox(height: 24),
+        const SizedBox(height: 24),
         // Product details
         _buildProductDetails(
           productTitle,
           productPrice,
           productId,
-          productImage,
           context,
         ),
       ],
@@ -296,7 +221,6 @@ class _ProductPageState extends State<ProductPage> {
     String productTitle,
     String productPrice,
     String productId,
-    String productImage,
     BuildContext context,
   ) {
     return Column(
@@ -329,7 +253,7 @@ class _ProductPageState extends State<ProductPage> {
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
-          children: ['White', 'Black', 'Grey'].map((color) {
+          children: ['White', 'Black'].map((color) {
             return ChoiceChip(
               label: Text(color),
               selected: selectedColor == color,
@@ -424,8 +348,8 @@ class _ProductPageState extends State<ProductPage> {
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
-            onPressed: () => addToCart(
-                context, productId, productTitle, productPrice, productImage),
+            onPressed: () =>
+                addToCart(context, productId, productTitle, productPrice),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF4d2963),
               foregroundColor: Colors.white,
