@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
+import '../widgets/mobile_drawer.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -10,6 +11,7 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: const MobileDrawer(),
       body: Column(
         children: [
           const HeaderWidget(
