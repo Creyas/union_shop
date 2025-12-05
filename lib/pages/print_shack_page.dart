@@ -17,11 +17,11 @@ class _PrintShackPageState extends State<PrintShackPage> {
   String selectedSize = 'M';
   String selectedLineOption = 'One Line of Text';
   int quantity = 1;
-  
+
   final TextEditingController _line1Controller = TextEditingController();
   final TextEditingController _line2Controller = TextEditingController();
   final TextEditingController _line3Controller = TextEditingController();
-  
+
   final Map<String, String> colorImages = {
     'White': 'assets/images/white_hoodie1.jpg',
     'Black': 'assets/images/black_hoodie1.jpg',
@@ -57,7 +57,7 @@ class _PrintShackPageState extends State<PrintShackPage> {
 
   void addToCart(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    
+
     // Build personalization text
     List<String> lines = [];
     if (_line1Controller.text.isNotEmpty) lines.add(_line1Controller.text);
@@ -67,7 +67,7 @@ class _PrintShackPageState extends State<PrintShackPage> {
     if (maxLines >= 3 && _line3Controller.text.isNotEmpty) {
       lines.add(_line3Controller.text);
     }
-    
+
     if (lines.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -77,9 +77,9 @@ class _PrintShackPageState extends State<PrintShackPage> {
       );
       return;
     }
-    
+
     final personalizationText = lines.join(' | ');
-    
+
     final cartItem = CartItem(
       id: 'print-shack-${DateTime.now().millisecondsSinceEpoch}',
       name: 'Personalized Hoodie - $personalizationText',
@@ -524,4 +524,3 @@ class _PrintShackPageState extends State<PrintShackPage> {
     );
   }
 }
-
