@@ -47,17 +47,17 @@ class ProductsData {
           'Comfortable and warm hoodie perfect for casual wear. Features a cozy hood and front pocket.',
     ),
     Product(
-      id: 'black-hoodie',
-      title: 'Black Hoodie',
-      price: '£25.00',
-      defaultImageUrl: 'assets/images/black_hoodie1.jpg',
+      id: 'flask',
+      title: 'University Flask',
+      price: '£12.99',
+      defaultImageUrl: 'assets/images/white_flask.jpg',
       colorImages: {
-        'White': 'assets/images/white_hoodie1.jpg',
-        'Black': 'assets/images/black_hoodie1.jpg',
+        'White': 'assets/images/white_flask.jpg',
+        'Black': 'assets/images/black_flask.jpg',
       },
-      hasSize: true,
+      hasSize: false,
       description:
-          'Comfortable and warm hoodie perfect for casual wear. Features a cozy hood and front pocket.',
+          'Insulated stainless steel flask keeping your drinks hot or cold for hours. Perfect for campus life with University of Portsmouth branding.',
     ),
     Product(
       id: 'lanyard',
