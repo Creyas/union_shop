@@ -333,3 +333,39 @@ class _SearchOverlayState extends State<SearchOverlay> {
     );
   }
 
+  Widget _buildPageResultTile(Map<String, dynamic> page) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF4d2963).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            page['icon'] as IconData,
+            color: const Color(0xFF4d2963),
+            size: 24,
+          ),
+        ),
+        title: Text(
+          page['title'],
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          page['description'],
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => _navigateToPage(page),
+      ),
+    );
+  }
+
+ 
