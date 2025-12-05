@@ -81,41 +81,25 @@ class HeaderWidget extends StatelessWidget {
                   iconSize: 24,
                 ),
 
-              if (!isMobile || !showBack)
-                SizedBox(width: isMobile ? 8 : 16),
+              if (!isMobile || !showBack) SizedBox(width: isMobile ? 8 : 16),
 
               // Logo
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/',
-                    (route) => false,
-                  ),
-                  child: Image.asset(
-                    'assets/images/union_logo.png',
-                    height: isMobile ? 30 : 40,
-                    fit: BoxFit.contain,
-                    alignment: Alignment.centerLeft,
-                  ),
+              GestureDetector(
+                onTap: () => Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/',
+                  (route) => false,
+                ),
+                child: Image.asset(
+                  'assets/images/union_logo.png',
+                  height: isMobile ? 24 : 40,
+                  fit: BoxFit.contain,
+                  alignment: Alignment.centerLeft,
                 ),
               ),
 
-              // Desktop Navigation
-              if (isWideScreen && !compact)
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildNavButton(context, 'Home', '/'),
-                      const SizedBox(width: 24),
-                      _buildNavButton(context, 'Shop', '/collections'),
-                      const SizedBox(width: 24),
-                      _buildNavButton(context, 'About', '/about'),
-                    ],
-                  ),
-                ),
+              // Spacer to push icons to the right
+              const Spacer(),
 
               // Right side icons
               Row(
@@ -127,25 +111,27 @@ class HeaderWidget extends StatelessWidget {
                       SearchOverlay.show(
                         context,
                         onSelect: (query) {
-                          // Example: send to product page with query as argument.
-                          // Update your '/product' route to accept arguments or handle as you prefer.
                           Navigator.pushNamed(context, '/product',
                               arguments: {'query': query});
                         },
+                      );
                     },
-                    iconSize: isMobile ? 20 : 24,
+                    iconSize: isMobile ? 18 : 24,
+                    padding: isMobile ? const EdgeInsets.all(8) : null,
                   ),
                   IconButton(
                     icon: const Icon(Icons.person_outline),
                     onPressed: () => Navigator.pushNamed(context, '/auth'),
-                    iconSize: isMobile ? 20 : 24,
+                    iconSize: isMobile ? 18 : 24,
+                    padding: isMobile ? const EdgeInsets.all(8) : null,
                   ),
                   Stack(
                     children: [
                       IconButton(
                         icon: const Icon(Icons.shopping_bag_outlined),
                         onPressed: () => Navigator.pushNamed(context, '/cart'),
-                        iconSize: isMobile ? 20 : 24,
+                        iconSize: isMobile ? 18 : 24,
+                        padding: isMobile ? const EdgeInsets.all(8) : null,
                       ),
                       if (cartProvider.itemCount > 0)
                         Positioned(
@@ -226,7 +212,8 @@ class HeaderWidget extends StatelessWidget {
               title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/', (route) => false);
               },
             ),
             ListTile(
