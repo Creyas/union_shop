@@ -361,3 +361,71 @@ class _PrintShackPageState extends State<PrintShackPage> {
         ),
         const SizedBox(height: 24),
 
+        // Personalization Text Fields
+        const Text(
+          'Personalisation Line 1:',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _line1Controller,
+          decoration: InputDecoration(
+            hintText: 'Enter text for line 1',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            contentPadding: const EdgeInsets.all(12),
+          ),
+          maxLength: 20,
+        ),
+        const SizedBox(height: 16),
+
+        if (maxLines >= 2) ...[
+          const Text(
+            'Personalisation Line 2:',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _line2Controller,
+            decoration: InputDecoration(
+              hintText: 'Enter text for line 2',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding: const EdgeInsets.all(12),
+            ),
+            maxLength: 20,
+          ),
+          const SizedBox(height: 16),
+        ],
+
+        if (maxLines >= 3) ...[
+          const Text(
+            'Personalisation Line 3:',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _line3Controller,
+            decoration: InputDecoration(
+              hintText: 'Enter text for line 3',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding: const EdgeInsets.all(12),
+            ),
+            maxLength: 20,
+          ),
+          const SizedBox(height: 16),
+        ],
+
