@@ -23,8 +23,8 @@ class _PrintShackPageState extends State<PrintShackPage> {
   final TextEditingController _line3Controller = TextEditingController();
 
   final Map<String, String> colorImages = {
-    'White': 'assets/images/white_hoodie1.jpg',
-    'Black': 'assets/images/black_hoodie1.jpg',
+    'White': 'assets/images/print_shack_hoodie.jpg',
+    'Black': 'assets/images/print_shack_hoodie.jpg',
   };
 
   final double basePrice = 25.00;
