@@ -6,6 +6,7 @@ import 'pages/about.dart';
 import 'pages/login_signup.dart';
 import 'pages/cart_page.dart';
 import 'pages/collections.dart';
+import 'pages/collection_detail.dart';
 import 'dart:async';
 import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
@@ -31,20 +32,21 @@ class UnionShopApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
         ),
         routes: {
-          '/': (context) => const HomeScreen(),
+          '/': (context) => const HomePage(),
           '/product': (context) => const ProductPage(),
           '/about': (context) => const AboutPage(),
-          '/auth': (context) => const AuthPage(),
+          '/auth': (context) => const LoginSignupPage(),
           '/cart': (context) => const CartPage(),
           '/collections': (context) => const CollectionsPage(),
+          '/collection-detail': (context) => const CollectionDetailPage(),
         },
       ),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   void placeholderCallbackForButtons() {
     // This is the event handler for buttons that don't work yet
