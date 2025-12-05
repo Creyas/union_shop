@@ -89,12 +89,25 @@ class CartPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Shopping Cart',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Shopping Cart',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () => Navigator.pushNamed(context, '/collections'),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Continue Shopping'),
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFF4d2963),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 24),
 
@@ -178,11 +191,81 @@ class CartPage extends StatelessWidget {
                     ),
                     Column(
                       children: [
-                        Text(
-                          'Qty: ${item.quantity}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                        // Quantity controls
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey[300]!),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove, size: 16),
+                                onPressed: () {
+                                  if (item.quantity > 1) {
+                                    cartProvider.updateQuantity(
+                                        item.id, item.quantity - 1);
+                                  } else {
+                                    // Show confirmation dialog if quantity is 1
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Remove Item?'),
+                                        content: const Text(
+                                            'Do you want to remove this item from your cart?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              cartProvider.removeItem(item.id);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text(
+                                              'Remove',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                                padding: const EdgeInsets.all(4),
+                                constraints: const BoxConstraints(
+                                  minWidth: 32,
+                                  minHeight: 32,
+                                ),
+                              ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  '${item.quantity}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.add, size: 16),
+                                onPressed: () {
+                                  cartProvider.updateQuantity(
+                                      item.id, item.quantity + 1);
+                                },
+                                padding: const EdgeInsets.all(4),
+                                constraints: const BoxConstraints(
+                                  minWidth: 32,
+                                  minHeight: 32,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -192,7 +275,30 @@ class CartPage extends StatelessWidget {
                             color: Colors.red,
                           ),
                           onPressed: () {
-                            cartProvider.removeItem(item.id);
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Remove Item?'),
+                                content: const Text(
+                                    'Do you want to remove this item from your cart?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      cartProvider.removeItem(item.id);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text(
+                                      'Remove',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                         ),
                       ],
@@ -246,21 +352,28 @@ class CartPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle checkout action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4d2963),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Checkout functionality coming soon!'),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4d2963),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Proceed to Checkout',
-                  style: TextStyle(fontSize: 18),
+                  child: const Text(
+                    'Proceed to Checkout',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               ),
             ],
