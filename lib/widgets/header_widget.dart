@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../providers/cart_provider.dart';
 import '../services/auth_service.dart';
 import 'search_overlay.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class HeaderWidget extends StatelessWidget {
   final bool showBack;
@@ -18,49 +17,26 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
-    // For web, add extra delay to ensure Firebase is ready
-    if (kIsWeb) {
-      return FutureBuilder(
-        future: Future.delayed(const Duration(milliseconds: 100)),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return _buildHeader(context, isMobile, false, 'Guest');
-          }
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // Handle errors gracefully
+        if (snapshot.hasError) {
+          debugPrint('Firebase Auth Stream error: ${snapshot.error}');
+          return _buildHeader(context, isMobile, false, 'Guest');
+        }
 
-          return _buildAuthStreamBuilder(context, isMobile);
-        },
-      );
-    }
+        // Handle loading
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _buildHeader(context, isMobile, false, 'Guest');
+        }
 
-    return _buildAuthStreamBuilder(context, isMobile);
-  }
+        final isLoggedIn = snapshot.hasData && snapshot.data != null;
+        final userName = snapshot.data?.displayName ?? 'Guest';
 
-  Widget _buildAuthStreamBuilder(BuildContext context, bool isMobile) {
-    try {
-      return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          // Handle errors
-          if (snapshot.hasError) {
-            print('Firebase Auth Stream error: ${snapshot.error}');
-            return _buildHeader(context, isMobile, false, 'Guest');
-          }
-
-          // Handle loading
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildHeader(context, isMobile, false, 'Guest');
-          }
-
-          final isLoggedIn = snapshot.hasData && snapshot.data != null;
-          final userName = snapshot.data?.displayName ?? 'Guest';
-
-          return _buildHeader(context, isMobile, isLoggedIn, userName);
-        },
-      );
-    } catch (e) {
-      print('Firebase Auth error: $e');
-      return _buildHeader(context, isMobile, false, 'Guest');
-    }
+        return _buildHeader(context, isMobile, isLoggedIn, userName);
+      },
+    );
   }
 
   Widget _buildHeader(
@@ -109,7 +85,7 @@ class HeaderWidget extends StatelessWidget {
                   Navigator.pushNamed(context, '/');
                 },
                 child: Image.asset(
-                  'assets/union_logo.jpg',
+                  'images/union_logo.jpg',
                   height: 40,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
@@ -240,7 +216,7 @@ class HeaderWidget extends StatelessWidget {
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, '/'),
               child: Image.asset(
-                'assets/union_logo.jpg',
+                'images/union_logo.jpg',
                 height: 32,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) {
