@@ -4,6 +4,7 @@ import '../providers/cart_provider.dart';
 import '../models/cart_item.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
+import '../data/products_data.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -16,51 +17,24 @@ class _ProductPageState extends State<ProductPage> {
   String selectedColor = 'White';
   String selectedSize = 'M';
   int quantity = 1;
-  int selectedImageIndex = 0;
 
-  // Map colors to their corresponding images
-  Map<String, String> getColorImages(String productId) {
-    switch (productId) {
-      case 'white-shirt':
-      case 'black-shirt':
-        return {
-          'White': 'assets/images/white_shirt1.jpg',
-          'Black': 'assets/images/black_shirt1.jpg',
-        };
-      case 'white-hoodie':
-      case 'black-hoodie':
-        return {
-          'White': 'assets/images/white_hoodie1.jpg',
-          'Black': 'assets/images/black_hoodie1.jpg',
-        };
-      default:
-        return {
-          'White': 'assets/images/white_shirt1.jpg',
-          'Black': 'assets/images/black_shirt1.jpg',
-        };
-    }
+  String getCurrentImage(Product product) {
+    return product.colorImages[selectedColor] ??
+        product.colorImages['White'] ??
+        product.defaultImageUrl;
   }
 
-  // Get current image based on selected color
-  String getCurrentImage(String productId) {
-    final colorImages = getColorImages(productId);
-    return colorImages[selectedColor] ??
-        colorImages['White'] ??
-        'assets/images/white_shirt1.jpg';
-  }
-
-  void addToCart(BuildContext context, String productId, String productTitle,
-      String productPrice) {
+  void addToCart(BuildContext context, Product product) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    final price = double.parse(productPrice.replaceAll('£', ''));
-    final currentImage = getCurrentImage(productId);
+    final price = double.parse(product.price.replaceAll('£', ''));
+    final currentImage = getCurrentImage(product);
 
     final cartItem = CartItem(
-      id: '$productId-${DateTime.now().millisecondsSinceEpoch}',
-      name: productTitle,
+      id: '${product.id}-${DateTime.now().millisecondsSinceEpoch}',
+      name: product.title,
       price: price,
       color: selectedColor,
-      size: selectedSize,
+      size: product.hasSize ? selectedSize : 'One Size',
       quantity: quantity,
       imageUrl: currentImage,
     );
@@ -80,12 +54,18 @@ class _ProductPageState extends State<ProductPage> {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-    final productTitle = args?['title'] ?? 'Essential T-Shirt';
-    final productPrice = args?['price'] ?? '£6.99';
-    final productId = args?['id'] ?? 'default';
+    final productId = args?['id'] ?? 'white-shirt';
+    final product = ProductsData.getProductById(productId);
+
+    if (product == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Product Not Found')),
+        body: const Center(child: Text('Product not found')),
+      );
+    }
 
     final isDesktop = MediaQuery.of(context).size.width > 900;
-    final currentImage = getCurrentImage(productId);
+    final currentImage = getCurrentImage(product);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -100,20 +80,8 @@ class _ProductPageState extends State<ProductPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: isDesktop
-                      ? _buildDesktopLayout(
-                          currentImage,
-                          productTitle,
-                          productPrice,
-                          productId,
-                          context,
-                        )
-                      : _buildMobileLayout(
-                          currentImage,
-                          productTitle,
-                          productPrice,
-                          productId,
-                          context,
-                        ),
+                      ? _buildDesktopLayout(currentImage, product, context)
+                      : _buildMobileLayout(currentImage, product, context),
                 ),
               ),
             ),
@@ -127,9 +95,7 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _buildDesktopLayout(
     String currentImage,
-    String productTitle,
-    String productPrice,
-    String productId,
+    Product product,
     BuildContext context,
   ) {
     return Row(
@@ -163,12 +129,7 @@ class _ProductPageState extends State<ProductPage> {
         // Right side - Product details and buttons
         Expanded(
           flex: 1,
-          child: _buildProductDetails(
-            productTitle,
-            productPrice,
-            productId,
-            context,
-          ),
+          child: _buildProductDetails(product, context),
         ),
       ],
     );
@@ -176,9 +137,7 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _buildMobileLayout(
     String currentImage,
-    String productTitle,
-    String productPrice,
-    String productId,
+    Product product,
     BuildContext context,
   ) {
     return Column(
@@ -207,27 +166,17 @@ class _ProductPageState extends State<ProductPage> {
         ),
         const SizedBox(height: 24),
         // Product details
-        _buildProductDetails(
-          productTitle,
-          productPrice,
-          productId,
-          context,
-        ),
+        _buildProductDetails(product, context),
       ],
     );
   }
 
-  Widget _buildProductDetails(
-    String productTitle,
-    String productPrice,
-    String productId,
-    BuildContext context,
-  ) {
+  Widget _buildProductDetails(Product product, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          productTitle,
+          product.title,
           style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -235,7 +184,7 @@ class _ProductPageState extends State<ProductPage> {
         ),
         const SizedBox(height: 12),
         Text(
-          productPrice,
+          product.price,
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -253,7 +202,7 @@ class _ProductPageState extends State<ProductPage> {
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
-          children: ['White', 'Black'].map((color) {
+          children: product.colorImages.keys.map((color) {
             return ChoiceChip(
               label: Text(color),
               selected: selectedColor == color,
@@ -269,33 +218,35 @@ class _ProductPageState extends State<ProductPage> {
             );
           }).toList(),
         ),
-        const SizedBox(height: 24),
-        const Text(
-          'Size',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+        if (product.hasSize) ...[
+          const SizedBox(height: 24),
+          const Text(
+            'Size',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          children: ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) {
-            return ChoiceChip(
-              label: Text(size),
-              selected: selectedSize == size,
-              onSelected: (selected) {
-                setState(() {
-                  selectedSize = size;
-                });
-              },
-              selectedColor: const Color(0xFF4d2963),
-              labelStyle: TextStyle(
-                color: selectedSize == size ? Colors.white : Colors.black,
-              ),
-            );
-          }).toList(),
-        ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            children: ['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) {
+              return ChoiceChip(
+                label: Text(size),
+                selected: selectedSize == size,
+                onSelected: (selected) {
+                  setState(() {
+                    selectedSize = size;
+                  });
+                },
+                selectedColor: const Color(0xFF4d2963),
+                labelStyle: TextStyle(
+                  color: selectedSize == size ? Colors.white : Colors.black,
+                ),
+              );
+            }).toList(),
+          ),
+        ],
         const SizedBox(height: 24),
         const Text(
           'Quantity',
@@ -348,8 +299,7 @@ class _ProductPageState extends State<ProductPage> {
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
-            onPressed: () =>
-                addToCart(context, productId, productTitle, productPrice),
+            onPressed: () => addToCart(context, product),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF4d2963),
               foregroundColor: Colors.white,
@@ -376,9 +326,9 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
-          'High-quality comfortable clothing perfect for everyday wear. Made from premium materials with attention to detail.',
-          style: TextStyle(
+        Text(
+          product.description,
+          style: const TextStyle(
             fontSize: 14,
             height: 1.6,
             color: Colors.black87,
