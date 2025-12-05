@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
 import 'pages/product_page.dart';
 import 'pages/about.dart';
-import 'pages/login_signup.dart'; // This is correct
+import 'pages/login_signup.dart';
 import 'pages/cart_page.dart';
 import 'pages/collections.dart';
 import 'pages/collection_detail.dart';
@@ -18,14 +18,20 @@ import 'pages/profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  try {
-    await Firebase.initializeApp();
-    print('Firebase initialized successfully');
-  } catch (e) {
-    print('Firebase initialization error: $e');
-  }
-
+  
+  // Initialize Firebase for web with explicit options
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyByO8RaPcfsCJoo2BzSU81MjCHFBUyJyF4",
+      authDomain: "union-shop-63006.firebaseapp.com",
+      projectId: "union-shop-63006",
+      storageBucket: "union-shop-63006.firebasestorage.app",
+      messagingSenderId: "588555793266",
+      appId: "1:588555793266:web:d230360596811c5bf5a3eb",
+      measurementId: "G-31B60P5C5P"
+    ),
+  );
+  
   runApp(const UnionShopApp());
 }
 
@@ -44,12 +50,12 @@ class UnionShopApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
         ),
+        initialRoute: '/',
         routes: {
           '/': (context) => const HomePage(),
           '/product': (context) => const ProductPage(),
           '/about': (context) => const AboutPage(),
-          '/auth': (context) =>
-              const LoginSignupPage(), // Changed to match your file
+          '/auth': (context) => const LoginSignupPage(),
           '/cart': (context) => const CartPage(),
           '/collections': (context) => const CollectionsPage(),
           '/collection-detail': (context) => const CollectionDetailPage(),
@@ -61,6 +67,10 @@ class UnionShopApp extends StatelessWidget {
     );
   }
 }
+
+// Remove the FirebaseInitializer widget entirely
+
+// ...rest of your HomePage and other code...
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
