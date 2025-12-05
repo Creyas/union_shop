@@ -341,3 +341,104 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       const SizedBox(height: 16),
 
+                                      // User ID (Read-only)
+                                      TextFormField(
+                                        initialValue: _currentUser!.uid,
+                                        decoration: InputDecoration(
+                                          labelText: 'User ID',
+                                          prefixIcon: const Icon(Icons.fingerprint),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          enabled: false,
+                                        ),
+                                      ),
+
+                                      if (_isEditing) ...[
+                                        const SizedBox(height: 24),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: OutlinedButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _isEditing = false;
+                                                    _loadUserData();
+                                                  });
+                                                },
+                                                child: const Text('Cancel'),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                onPressed: _updateProfile,
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: const Color(0xFF4d2963),
+                                                ),
+                                                child: const Text('Save Changes'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Account Actions
+                            Card(
+                              elevation: 2,
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(Icons.shopping_bag, color: Color(0xFF4d2963)),
+                                    title: const Text('Order History'),
+                                    trailing: const Icon(Icons.chevron_right),
+                                    onTap: () {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Order history coming soon!'),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const Divider(height: 1),
+                                  ListTile(
+                                    leading: const Icon(Icons.lock, color: Color(0xFF4d2963)),
+                                    title: const Text('Change Password'),
+                                    trailing: const Icon(Icons.chevron_right),
+                                    onTap: () {
+                                      _showChangePasswordDialog();
+                                    },
+                                  ),
+                                  const Divider(height: 1),
+                                  ListTile(
+                                    leading: const Icon(Icons.logout, color: Colors.red),
+                                    title: const Text(
+                                      'Sign Out',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    trailing: const Icon(Icons.chevron_right, color: Colors.red),
+                                    onTap: _signOut,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  const FooterWidget(),
+                ],
+              ),
+            ),
+    );
+  }
+
+  
