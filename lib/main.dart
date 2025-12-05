@@ -11,6 +11,7 @@ import 'pages/collections.dart';
 import 'pages/collection_detail.dart';
 import 'pages/all_products_page.dart';
 import 'pages/print_shack_page.dart';
+import 'pages/freshers_sale_page.dart'; // Add this import
 import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
 import 'widgets/product_card.dart';
@@ -48,6 +49,7 @@ class UnionShopApp extends StatelessWidget {
           '/collections': (context) => const CollectionsPage(),
           '/collection-detail': (context) => const CollectionDetailPage(),
           '/all-products': (context) => const AllProductsPage(),
+          '/freshers-sale': (context) => const FreshersSalePage(), // Add this line
           '/print-shack': (context) => const PrintShackPage(),
           '/profile': (context) => const ProfilePage(),
         },
