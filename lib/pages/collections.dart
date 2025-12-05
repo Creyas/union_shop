@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
-import '../main.dart'; // Add this import to access ProductCard
+import '../main.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    final isTablet = MediaQuery.of(context).size.width < 900;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -17,12 +20,15 @@ class CollectionsPage extends StatelessWidget {
 
             // Page Title
             Padding(
-              padding: const EdgeInsets.only(top: 32.0, bottom: 8.0),
+              padding: EdgeInsets.only(
+                top: isMobile ? 24.0 : 32.0,
+                bottom: isMobile ? 16.0 : 24.0,
+              ),
               child: Center(
                 child: Text(
                   'Collections',
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: isMobile ? 28 : 36,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey[800],
                   ),
@@ -30,77 +36,11 @@ class CollectionsPage extends StatelessWidget {
               ),
             ),
 
-            // Collections Grid
-            Container(
-              padding: const EdgeInsets.all(24),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  int crossAxisCount = 1;
-                  if (constraints.maxWidth > 1200) {
-                    crossAxisCount = 3;
-                  } else if (constraints.maxWidth > 600) {
-                    crossAxisCount = 2;
-                  }
-
-                  return GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 24,
-                    mainAxisSpacing: 24,
-                    childAspectRatio: 0.85,
-                    children: [
-                      _buildCollectionCard(
-                        context,
-                        title: 'Essential Range',
-                        itemCount: 4,
-                        imageUrl: 'assets/images/white_shirt1.jpg',
-                        collectionId: 'essentials',
-                      ),
-                      _buildCollectionCard(
-                        context,
-                        title: 'Hoodies',
-                        itemCount: 2,
-                        imageUrl: 'assets/images/white_hoodie1.jpg',
-                        collectionId: 'hoodies',
-                      ),
-                      _buildCollectionCard(
-                        context,
-                        title: 'T-Shirts',
-                        itemCount: 2,
-                        imageUrl: 'assets/images/black_shirt1.jpg',
-                        collectionId: 'tshirts',
-                      ),
-                      _buildCollectionCard(
-                        context,
-                        title: 'Sale Items',
-                        itemCount: 3,
-                        imageUrl: 'assets/images/black_hoodie1.jpg',
-                        collectionId: 'sale',
-                      ),
-                      _buildCollectionCard(
-                        context,
-                        title: 'New Arrivals',
-                        itemCount: 4,
-                        imageUrl: 'assets/images/white_shirt1.jpg',
-                        collectionId: 'new-arrivals',
-                      ),
-                      _buildCollectionCard(
-                        context,
-                        title: 'Winter Collection',
-                        itemCount: 2,
-                        imageUrl: 'assets/images/white_hoodie1.jpg',
-                        collectionId: 'winter',
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-
-            // Products Grid
+            // Collections Categories
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16.0 : 24.0,
+              ),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   int crossAxisCount = 1;
@@ -116,20 +56,93 @@ class CollectionsPage extends StatelessWidget {
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 24,
                     mainAxisSpacing: 24,
-                    childAspectRatio: 0.75,
-                    children: ProductsData.allProducts.map((product) {
-                      return ProductCard(
-                        id: product.id,
-                        title: product.title,
-                        price: product.price,
-                        imageUrl: product.defaultImageUrl,
-                      );
-                    }).toList(),
+                    childAspectRatio: 1.2,
+                    children: [
+                      _buildCollectionCategory(
+                        context,
+                        title: 'Clothes',
+                        description: 'T-Shirts & Hoodies',
+                        imageUrl: 'assets/images/white_hoodie1.jpg',
+                        category: 'clothes',
+                        itemCount: _getClothesProducts().length,
+                      ),
+                      _buildCollectionCategory(
+                        context,
+                        title: 'Merchandise',
+                        description: 'Accessories & More',
+                        imageUrl: 'assets/images/backpack.jpg',
+                        category: 'merchandise',
+                        itemCount: _getMerchandiseProducts().length,
+                      ),
+                      _buildCollectionCategory(
+                        context,
+                        title: 'Freshers Sale',
+                        description: 'Special Offers',
+                        imageUrl: 'assets/images/white_shirt1.jpg',
+                        category: 'freshers',
+                        itemCount: _getFreshersSaleProducts().length,
+                      ),
+                    ],
                   );
                 },
               ),
             ),
 
+            const SizedBox(height: 48),
+
+            // All Products Section
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 16.0 : 24.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'All Products',
+                    style: TextStyle(
+                      fontSize: isMobile ? 24 : 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      int crossAxisCount = 1;
+                      double childAspectRatio = 0.75;
+
+                      if (constraints.maxWidth > 900) {
+                        crossAxisCount = 3;
+                        childAspectRatio = 0.75;
+                      } else if (constraints.maxWidth > 600) {
+                        crossAxisCount = 2;
+                        childAspectRatio = 0.75;
+                      }
+
+                      return GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 24,
+                        mainAxisSpacing: 24,
+                        childAspectRatio: childAspectRatio,
+                        children: ProductsData.allProducts.map((product) {
+                          return ProductCard(
+                            id: product.id,
+                            title: product.title,
+                            price: product.price,
+                            imageUrl: product.defaultImageUrl,
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 48),
             const FooterWidget(),
           ],
         ),
@@ -137,89 +150,142 @@ class CollectionsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCollectionCard(
+  Widget _buildCollectionCategory(
     BuildContext context, {
     required String title,
-    required int itemCount,
+    required String description,
     required String imageUrl,
-    required String collectionId,
+    required String category,
+    required int itemCount,
   }) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          // Navigate to collection detail page
           Navigator.pushNamed(
             context,
-            '/collection',
+            '/collection-detail',
             arguments: {
-              'id': collectionId,
+              'category': category,
               'title': title,
             },
           );
         },
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey[300]!),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Collection Image
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8),
-                  ),
-                  child: Image.asset(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[300],
-                        child: const Center(
-                          child: Icon(
-                            Icons.image_not_supported,
-                            size: 50,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-
-              // Collection Info
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '$itemCount ${itemCount == 1 ? 'item' : 'items'}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
               ),
             ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Background Image
+                Image.asset(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.image_not_supported, size: 50),
+                    );
+                  },
+                ),
+                // Gradient Overlay
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.7),
+                      ],
+                    ),
+                  ),
+                ),
+                // Text Content
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          description,
+                          style: TextStyle(
+                            color: Colors.grey[300],
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '$itemCount ${itemCount == 1 ? 'item' : 'items'}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  // Helper methods to filter products
+  static List<Product> _getClothesProducts() {
+    return ProductsData.allProducts
+        .where((p) => ['white-shirt', 'white-hoodie'].contains(p.id))
+        .toList();
+  }
+
+  static List<Product> _getMerchandiseProducts() {
+    return ProductsData.allProducts
+        .where((p) => [
+              'flask',
+              'lanyard',
+              'backpack',
+              'beerpong',
+              'calculator',
+              'dartset',
+              'football'
+            ].contains(p.id))
+        .toList();
+  }
+
+  static List<Product> _getFreshersSaleProducts() {
+    // You can customize which products are on sale
+    return ProductsData.allProducts
+        .where((p) =>
+            ['white-shirt', 'lanyard', 'flask', 'calculator'].contains(p.id))
+        .toList();
   }
 }
