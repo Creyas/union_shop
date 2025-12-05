@@ -35,8 +35,7 @@ class UnionShopApp extends StatelessWidget {
           '/about': (context) => const AboutPage(),
           '/auth': (context) => const AuthPage(),
           '/cart': (context) => const CartPage(),
-          '/collections': (context) =>
-              const CollectionsPage(), // Add route for CollectionsPage
+          '/collections': (context) => const CollectionsPage(),
         },
       ),
     );
@@ -45,18 +44,6 @@ class UnionShopApp extends StatelessWidget {
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  void navigateToHome(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-  }
-
-  void navigateToProduct(BuildContext context) {
-    Navigator.pushNamed(context, '/product');
-  }
-
-  void navigateToAbout(BuildContext context) {
-    Navigator.pushNamed(context, '/about');
-  }
 
   void placeholderCallbackForButtons() {
     // This is the event handler for buttons that don't work yet
@@ -68,16 +55,11 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            HeaderWidget(
-              compact: true,
-              onLogoTap: () =>
-                  Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false),
-              onAbout: () => Navigator.pushNamed(context, '/about'),
-            ),
+            const HeaderWidget(),
 
             // Hero Section (replaced by carousel)
             HeroCarousel(
-              height: 400,
+              height: MediaQuery.of(context).size.width < 600 ? 300 : 400,
               imageUrls: const [
                 'assets/images/black_hoodie1.jpg',
                 'assets/images/white_hoodie1.jpg',
@@ -90,53 +72,75 @@ class HomeScreen extends StatelessWidget {
             Container(
               color: Colors.white,
               child: Padding(
-                padding: const EdgeInsets.all(40.0),
+                padding: EdgeInsets.all(
+                  MediaQuery.of(context).size.width < 600 ? 16.0 : 40.0,
+                ),
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       'SIGNATURE RANGE',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize:
+                            MediaQuery.of(context).size.width < 600 ? 16 : 20,
                         color: Colors.black,
                         letterSpacing: 1,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 48),
-                    GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount:
-                          MediaQuery.of(context).size.width > 600 ? 2 : 1,
-                      crossAxisSpacing: 24,
-                      mainAxisSpacing: 48,
-                      childAspectRatio: 2.5,
-                      children: [
-                        ProductCard(
-                          id: 'white-shirt',
-                          title: 'Essential T-Shirt',
-                          price: '£6.99',
-                          imageUrl: 'assets/images/white_shirt1.jpg',
-                        ),
-                        ProductCard(
-                          id: 'white-hoodie',
-                          title: 'Classic Hoodie',
-                          price: '£25.00',
-                          imageUrl: 'assets/images/white_hoodie1.jpg',
-                        ),
-                        ProductCard(
-                          id: 'black-hoodie',
-                          title: 'Black Hoodie',
-                          price: '£25.00',
-                          imageUrl: 'assets/images/black_hoodie1.jpg',
-                        ),
-                        ProductCard(
-                          id: 'black-shirt',
-                          title: 'Black T-Shirt',
-                          price: '£15.00',
-                          imageUrl: 'assets/images/black_shirt1.jpg',
-                        ),
-                      ],
+                    SizedBox(
+                        height:
+                            MediaQuery.of(context).size.width < 600 ? 24 : 48),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        int crossAxisCount = 1;
+                        double childAspectRatio = 0.75;
+
+                        if (constraints.maxWidth > 900) {
+                          crossAxisCount = 2;
+                          childAspectRatio = 0.75;
+                        } else if (constraints.maxWidth > 600) {
+                          crossAxisCount = 2;
+                          childAspectRatio = 0.7;
+                        } else {
+                          crossAxisCount = 1;
+                          childAspectRatio = 0.75;
+                        }
+
+                        return GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 24,
+                          childAspectRatio: childAspectRatio,
+                          children: [
+                            ProductCard(
+                              id: 'white-shirt',
+                              title: 'Essential T-Shirt',
+                              price: '£6.99',
+                              imageUrl: 'assets/images/white_shirt1.jpg',
+                            ),
+                            ProductCard(
+                              id: 'white-hoodie',
+                              title: 'Classic Hoodie',
+                              price: '£25.00',
+                              imageUrl: 'assets/images/white_hoodie1.jpg',
+                            ),
+                            ProductCard(
+                              id: 'black-hoodie',
+                              title: 'Black Hoodie',
+                              price: '£25.00',
+                              imageUrl: 'assets/images/black_hoodie1.jpg',
+                            ),
+                            ProductCard(
+                              id: 'black-shirt',
+                              title: 'Black T-Shirt',
+                              price: '£15.00',
+                              imageUrl: 'assets/images/black_shirt1.jpg',
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -226,21 +230,24 @@ class _ProductCardState extends State<ProductCard> {
                 ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8),
-                Text(
-                  widget.title,
-                  style: const TextStyle(fontSize: 14, color: Colors.black),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  widget.price,
-                  style: const TextStyle(fontSize: 13, color: Colors.grey),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: const TextStyle(fontSize: 14, color: Colors.black),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    widget.price,
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -316,126 +323,108 @@ class _HeroCarouselState extends State<HeroCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return SizedBox(
       height: widget.height,
       width: double.infinity,
       child: Stack(
         children: [
-          // PageView for images (wrapped so horizontal drags are forwarded)
+          // PageView for images
           Positioned.fill(
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              // forward horizontal drag to PageController so dragging works inside
-              // the outer vertical scroll view and overlaid widgets
-              onHorizontalDragUpdate: (details) {
-                _pageController
-                    .jumpTo(_pageController.offset - details.delta.dx);
-              },
-              onHorizontalDragEnd: (details) {
-                // snap to the nearest page, with a velocity-based bias
-                final double page = _pageController.page ??
-                    _pageController.initialPage.toDouble();
-                int target = page.round();
-                final v = details.primaryVelocity ?? 0.0;
-                if (v.abs() > 300) {
-                  target = v < 0 ? (page + 1).toInt() : (page - 1).toInt();
+            child: PageView.builder(
+              controller: _pageController,
+              physics: const PageScrollPhysics(),
+              itemCount: widget.imageUrls.length,
+              onPageChanged: (index) {
+                setState(() => _current = index);
+                if (!_isPaused) {
+                  _stopTimer();
+                  _startTimer();
                 }
-                target = target.clamp(0, widget.imageUrls.length - 1);
-                _pageController.animateToPage(
-                  target,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeOut,
+              },
+              itemBuilder: (context, index) {
+                final url = widget.imageUrls[index];
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    url.startsWith('http')
+                        ? Image.network(
+                            url,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Icon(Icons.image_not_supported,
+                                      color: Colors.grey),
+                                ),
+                              );
+                            },
+                          )
+                        : Image.asset(
+                            url,
+                            fit: BoxFit.cover,
+                          ),
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(0, 0, 0, 0.5),
+                      ),
+                    ),
+                  ],
                 );
               },
-              child: PageView.builder(
-                controller: _pageController,
-                physics: const PageScrollPhysics(),
-                itemCount: widget.imageUrls.length,
-                onPageChanged: (index) {
-                  setState(() => _current = index);
-                  if (!_isPaused) {
-                    _stopTimer();
-                    _startTimer();
-                  }
-                },
-                itemBuilder: (context, index) {
-                  final url = widget.imageUrls[index];
-                  return Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      // choose asset for local images, network otherwise
-                      url.startsWith('http')
-                          ? Image.network(
-                              url,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: Colors.grey[300],
-                                  child: const Center(
-                                    child: Icon(Icons.image_not_supported,
-                                        color: Colors.grey),
-                                  ),
-                                );
-                              },
-                            )
-                          : Image.asset(
-                              url,
-                              fit: BoxFit.cover,
-                            ),
-                      const IgnorePointer(
-                        ignoring: true,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(0, 0, 0, 0.5)),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
             ),
           ),
 
-          // Content overlay (same content as before)
+          // Content overlay
           Positioned(
-            left: 24,
-            right: 24,
-            top: 80,
+            left: 16,
+            right: 16,
+            top: isMobile ? 40 : 80,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   'Placeholder Hero Title',
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: isMobile ? 24 : 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     height: 1.2,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
-                const Text(
+                SizedBox(height: isMobile ? 8 : 16),
+                Text(
                   "This is placeholder text for the hero section.",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: isMobile ? 14 : 20,
                     color: Colors.white,
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: isMobile ? 16 : 32),
                 ElevatedButton(
                   onPressed: widget.onBrowse,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4d2963),
                     foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 20 : 24,
+                      vertical: isMobile ? 10 : 12,
+                    ),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.zero,
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'BROWSE PRODUCTS',
-                    style: TextStyle(fontSize: 14, letterSpacing: 1),
+                    style: TextStyle(
+                      fontSize: isMobile ? 12 : 14,
+                      letterSpacing: 1,
+                    ),
                   ),
                 ),
               ],
@@ -445,19 +434,18 @@ class _HeroCarouselState extends State<HeroCarousel> {
           // Bottom bar: dots centered, pause/play on right
           Positioned(
             bottom: 16,
-            left: 24,
-            right: 24,
+            left: 16,
+            right: 16,
             child: Row(
               children: [
                 Expanded(
                   child: Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Wrap(
+                      spacing: 4,
                       children: List.generate(widget.imageUrls.length, (i) {
                         final selected = i == _current;
                         return AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
                           width: selected ? 18 : 8,
                           height: 8,
                           decoration: BoxDecoration(
@@ -474,11 +462,14 @@ class _HeroCarouselState extends State<HeroCarousel> {
                   color: Colors.black45,
                   shape: const CircleBorder(),
                   child: IconButton(
-                    icon: Icon(_isPaused ? Icons.play_arrow : Icons.pause,
-                        color: Colors.white, size: 18),
+                    icon: Icon(
+                      _isPaused ? Icons.play_arrow : Icons.pause,
+                      color: Colors.white,
+                      size: isMobile ? 16 : 18,
+                    ),
                     onPressed: _togglePaused,
                     tooltip: _isPaused ? 'Resume' : 'Pause',
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(isMobile ? 6 : 8),
                   ),
                 ),
               ],
