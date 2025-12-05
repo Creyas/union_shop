@@ -5,6 +5,7 @@ import '../widgets/footer_widget.dart';
 import '../widgets/mobile_drawer.dart';
 import '../data/products_data.dart';
 import '../providers/cart_provider.dart';
+import '../models/cart_item.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
@@ -360,20 +361,32 @@ class _ProductPageState extends State<ProductPage> {
                 return;
               }
 
-              // Use discounted price if available
+              // Get the correct price (discounted if applicable)
               final priceToUse =
                   product.hasDiscount ? product.discountedPrice : product.price;
 
-              // Add to cart
-              cartProvider.addItem(
-                product.id,
-                product.title,
-                priceToUse,
-                product.colorImages[selectedColor] ?? product.defaultImageUrl,
-                quantity,
-                selectedSize,
-                selectedColor,
+              // Parse the price to double
+              final priceValue = double.parse(priceToUse.replaceAll('£', ''));
+
+              // Get the correct image based on selected color
+              final imageToUse = selectedColor != null &&
+                      product.colorImages.containsKey(selectedColor)
+                  ? product.colorImages[selectedColor]!
+                  : product.defaultImageUrl;
+
+              // Create CartItem
+              final cartItem = CartItem(
+                id: '${product.id}_${selectedColor ?? ''}_${selectedSize ?? ''}_${DateTime.now().millisecondsSinceEpoch}',
+                name: product.title,
+                price: priceValue,
+                imageUrl: imageToUse,
+                quantity: quantity,
+                size: selectedSize,
+                color: selectedColor,
               );
+
+              // Add to cart
+              cartProvider.addItem(cartItem);
 
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
