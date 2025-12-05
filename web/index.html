@@ -18,7 +18,7 @@
   <script>
     var serviceWorkerVersion = null;
   </script>
-  
+
   <script src="flutter.js" defer></script>
 </head>
 
@@ -39,20 +39,20 @@
       appId: "1:588555793266:web:d230360596811c5bf5a3eb",
       measurementId: "G-31B60P5C5P"
     };
-    
+
     firebase.initializeApp(firebaseConfig);
     console.log('✅ Firebase initialized');
   </script>
 
   <script>
-    window.addEventListener('load', function(ev) {
+    window.addEventListener('load', function (ev) {
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         }
-      }).then(function(engineInitializer) {
+      }).then(function (engineInitializer) {
         return engineInitializer.initializeEngine();
-      }).then(function(appRunner) {
+      }).then(function (appRunner) {
         return appRunner.runApp();
       });
     });
