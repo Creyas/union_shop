@@ -14,10 +14,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
-  
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  
+
   bool _isLoading = true;
   bool _isEditing = false;
   Map<String, dynamic>? _userData;
@@ -45,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (_currentUser != null) {
       _userData = await _authService.getUserData(_currentUser!.uid);
-      
+
       if (_userData != null) {
         _nameController.text = _userData!['name'] ?? '';
         _emailController.text = _userData!['email'] ?? '';
@@ -84,11 +84,11 @@ class _ProfilePageState extends State<ProfilePage> {
             backgroundColor: Colors.green,
           ),
         );
-        
+
         setState(() {
           _isEditing = false;
         });
-        
+
         await _loadUserData();
       }
     } catch (e) {
@@ -217,7 +217,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       backgroundColor: const Color(0xFF4d2963),
                                       child: Text(
                                         _nameController.text.isNotEmpty
-                                            ? _nameController.text[0].toUpperCase()
+                                            ? _nameController.text[0]
+                                                .toUpperCase()
                                             : 'U',
                                         style: const TextStyle(
                                           fontSize: 36,
@@ -266,10 +267,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: Form(
                                   key: _formKey,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           const Text(
                                             'Profile Information',
@@ -288,7 +291,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                               icon: const Icon(Icons.edit),
                                               label: const Text('Edit'),
                                               style: TextButton.styleFrom(
-                                                foregroundColor: const Color(0xFF4d2963),
+                                                foregroundColor:
+                                                    const Color(0xFF4d2963),
                                               ),
                                             ),
                                         ],
@@ -302,7 +306,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                           labelText: 'Full Name',
                                           prefixIcon: const Icon(Icons.person),
                                           border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                           enabled: _isEditing,
                                         ),
@@ -322,7 +327,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                           labelText: 'Email',
                                           prefixIcon: const Icon(Icons.email),
                                           border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                           enabled: _isEditing,
                                         ),
@@ -346,9 +352,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                         initialValue: _currentUser!.uid,
                                         decoration: InputDecoration(
                                           labelText: 'User ID',
-                                          prefixIcon: const Icon(Icons.fingerprint),
+                                          prefixIcon:
+                                              const Icon(Icons.fingerprint),
                                           border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                           enabled: false,
                                         ),
@@ -374,9 +382,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                               child: ElevatedButton(
                                                 onPressed: _updateProfile,
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: const Color(0xFF4d2963),
+                                                  backgroundColor:
+                                                      const Color(0xFF4d2963),
                                                 ),
-                                                child: const Text('Save Changes'),
+                                                child:
+                                                    const Text('Save Changes'),
                                               ),
                                             ),
                                           ],
@@ -395,20 +405,24 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: Column(
                                 children: [
                                   ListTile(
-                                    leading: const Icon(Icons.shopping_bag, color: Color(0xFF4d2963)),
+                                    leading: const Icon(Icons.shopping_bag,
+                                        color: Color(0xFF4d2963)),
                                     title: const Text('Order History'),
                                     trailing: const Icon(Icons.chevron_right),
                                     onTap: () {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         const SnackBar(
-                                          content: Text('Order history coming soon!'),
+                                          content: Text(
+                                              'Order history coming soon!'),
                                         ),
                                       );
                                     },
                                   ),
                                   const Divider(height: 1),
                                   ListTile(
-                                    leading: const Icon(Icons.lock, color: Color(0xFF4d2963)),
+                                    leading: const Icon(Icons.lock,
+                                        color: Color(0xFF4d2963)),
                                     title: const Text('Change Password'),
                                     trailing: const Icon(Icons.chevron_right),
                                     onTap: () {
@@ -417,12 +431,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   const Divider(height: 1),
                                   ListTile(
-                                    leading: const Icon(Icons.logout, color: Colors.red),
+                                    leading: const Icon(Icons.logout,
+                                        color: Colors.red),
                                     title: const Text(
                                       'Sign Out',
                                       style: TextStyle(color: Colors.red),
                                     ),
-                                    trailing: const Icon(Icons.chevron_right, color: Colors.red),
+                                    trailing: const Icon(Icons.chevron_right,
+                                        color: Colors.red),
                                     onTap: _signOut,
                                   ),
                                 ],
@@ -441,4 +457,116 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  
+  String _formatDate(dynamic timestamp) {
+    if (timestamp == null) return 'Unknown';
+    try {
+      final date = timestamp.toDate();
+      return '${date.day}/${date.month}/${date.year}';
+    } catch (e) {
+      return 'Unknown';
+    }
+  }
+
+  void _showChangePasswordDialog() {
+    final TextEditingController currentPasswordController =
+        TextEditingController();
+    final TextEditingController newPasswordController = TextEditingController();
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Change Password'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: currentPasswordController,
+                decoration: const InputDecoration(
+                  labelText: 'Current Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: newPasswordController,
+                decoration: const InputDecoration(
+                  labelText: 'New Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: confirmPasswordController,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm New Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (newPasswordController.text !=
+                  confirmPasswordController.text) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Passwords do not match'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              try {
+                // Re-authenticate user
+                final credential = EmailAuthProvider.credential(
+                  email: _currentUser!.email!,
+                  password: currentPasswordController.text,
+                );
+                await _currentUser!.reauthenticateWithCredential(credential);
+
+                // Update password
+                await _currentUser!.updatePassword(newPasswordController.text);
+
+                if (mounted) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Password changed successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error: ${e.toString()}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4d2963),
+            ),
+            child: const Text('Change Password'),
+          ),
+        ],
+      ),
+    );
+  }
+}
