@@ -17,20 +17,26 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        // Handle loading state
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildHeader(context, isMobile, false, 'Guest');
-        }
+    // Add error handling for Firebase
+    try {
+      return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildHeader(context, isMobile, false, 'Guest');
+          }
 
-        final isLoggedIn = snapshot.hasData && snapshot.data != null;
-        final userName = snapshot.data?.displayName ?? 'Guest';
+          final isLoggedIn = snapshot.hasData && snapshot.data != null;
+          final userName = snapshot.data?.displayName ?? 'Guest';
 
-        return _buildHeader(context, isMobile, isLoggedIn, userName);
-      },
-    );
+          return _buildHeader(context, isMobile, isLoggedIn, userName);
+        },
+      );
+    } catch (e) {
+      print('Firebase Auth error: $e');
+      // Fallback: show header without auth
+      return _buildHeader(context, isMobile, false, 'Guest');
+    }
   }
 
   Widget _buildHeader(
@@ -59,8 +65,6 @@ class HeaderWidget extends StatelessWidget {
 
   Widget _buildDesktopHeader(
       BuildContext context, bool isLoggedIn, String userName) {
-    final cartProvider = Provider.of<CartProvider>(context);
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -78,21 +82,13 @@ class HeaderWidget extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(context, '/');
                 },
-                child: Image.asset(
-                  'assets/union_logo.jpg', // Changed from .png to .jpg
-                  height: 40,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    // Fallback if image fails to load
-                    return const Text(
-                      'The Union Shop',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF4d2963),
-                      ),
-                    );
-                  },
+                child: const Text(
+                  'The Union Shop',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF4d2963),
+                  ),
                 ),
               ),
             ),
@@ -142,39 +138,9 @@ class HeaderWidget extends StatelessWidget {
                 );
               },
             ),
-            // Shopping cart with badge
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.shopping_cart),
-                  onPressed: () => Navigator.pushNamed(context, '/cart'),
-                ),
-                if (cartProvider.itemCount > 0)
-                  Positioned(
-                    right: 6,
-                    top: 6,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 18,
-                        minHeight: 18,
-                      ),
-                      child: Text(
-                        '${cartProvider.itemCount}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
+            IconButton(
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () => Navigator.pushNamed(context, '/cart'),
             ),
             const SizedBox(width: 8),
             if (isLoggedIn)
@@ -196,8 +162,6 @@ class HeaderWidget extends StatelessWidget {
 
   Widget _buildMobileHeader(
       BuildContext context, bool isLoggedIn, String userName) {
-    final cartProvider = Provider.of<CartProvider>(context);
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -210,21 +174,13 @@ class HeaderWidget extends StatelessWidget {
               ),
             GestureDetector(
               onTap: () => Navigator.pushNamed(context, '/'),
-              child: Image.asset(
-                'assets/union_logo.jpg', // Changed from .png to .jpg
-                height: 32,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  // Fallback if image fails to load
-                  return const Text(
-                    'The Union Shop',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF4d2963),
-                    ),
-                  );
-                },
+              child: const Text(
+                'The Union Shop',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF4d2963),
+                ),
               ),
             ),
           ],
@@ -240,39 +196,9 @@ class HeaderWidget extends StatelessWidget {
                 );
               },
             ),
-            // Shopping cart with badge
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.shopping_cart),
-                  onPressed: () => Navigator.pushNamed(context, '/cart'),
-                ),
-                if (cartProvider.itemCount > 0)
-                  Positioned(
-                    right: 6,
-                    top: 6,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 18,
-                        minHeight: 18,
-                      ),
-                      child: Text(
-                        '${cartProvider.itemCount}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
+            IconButton(
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () => Navigator.pushNamed(context, '/cart'),
             ),
             Builder(
               builder: (context) => IconButton(
