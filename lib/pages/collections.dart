@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
+import '../main.dart'; // Add this import to access ProductCard
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -148,7 +149,6 @@ class CollectionsPage extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           // Navigate to collection detail page
-          // You can implement this later to show products in this collection
           Navigator.pushNamed(
             context,
             '/collection',
