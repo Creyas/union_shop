@@ -1,174 +1,294 @@
 import 'package:flutter/material.dart';
+import 'search_overlay.dart';
 
 class FooterWidget extends StatelessWidget {
-  final bool compact;
-  const FooterWidget({super.key, this.compact = false});
+  const FooterWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final padding = compact ? 16.0 : 32.0;
-    final headingSize = compact ? 14.0 : 16.0;
-    final bodySize = compact ? 12.0 : 14.0;
-    final accent = const Color(0xFF4d2963);
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    final isTablet = MediaQuery.of(context).size.width < 900;
 
     return Container(
       width: double.infinity,
-      color: Colors.grey[50],
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isWide = constraints.maxWidth > 800;
-          Widget openingHours = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Opening Hours',
-                  style: TextStyle(
-                      fontSize: headingSize, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 12),
-              Text('❄️ Winter Break Closure Dates ❄️',
-                  style: TextStyle(
-                      fontSize: bodySize, fontStyle: FontStyle.italic)),
-              const SizedBox(height: 8),
-              Text('Closing 4pm 19/12/2025',
-                  style: TextStyle(fontSize: bodySize)),
-              Text('Reopening 10am 05/01/2026',
-                  style: TextStyle(fontSize: bodySize)),
-              Text('Last post date: 12pm on 18/12/2025',
-                  style: TextStyle(fontSize: bodySize)),
-              const SizedBox(height: 12),
-              const Divider(height: 1),
-              const SizedBox(height: 12),
-              Text('(Term Time)',
-                  style: TextStyle(
-                      fontSize: bodySize, fontWeight: FontWeight.w600)),
-              const SizedBox(height: 6),
-              Text('Monday - Friday 10am - 4pm',
-                  style: TextStyle(fontSize: bodySize)),
-              const SizedBox(height: 8),
-              Text('(Outside of Term Time / Consolidation Weeks)',
-                  style: TextStyle(
-                      fontSize: bodySize, fontWeight: FontWeight.w600)),
-              const SizedBox(height: 6),
-              Text('Monday - Friday 10am - 3pm',
-                  style: TextStyle(fontSize: bodySize)),
-              const SizedBox(height: 8),
-              Text('Purchase online 24/7',
-                  style: TextStyle(fontSize: bodySize)),
-            ],
-          );
+      color: const Color(0xFF2c2c2c),
+      padding: EdgeInsets.all(isMobile ? 16.0 : 32.0),
+      child: isMobile
+          ? _buildMobileFooter(context)
+          : _buildDesktopFooter(context, isTablet),
+    );
+  }
 
-          Widget helpInfo = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Help and Information',
-                  style: TextStyle(
-                      fontSize: headingSize, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero, minimumSize: const Size(0, 24)),
-                child: Text('Search',
-                    style:
-                        TextStyle(fontSize: bodySize, color: Colors.grey[800])),
-              ),
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero, minimumSize: const Size(0, 24)),
-                child: Text('Terms & Conditions of Sale',
-                    style:
-                        TextStyle(fontSize: bodySize, color: Colors.grey[800])),
-              ),
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero, minimumSize: const Size(0, 24)),
-                child: Text('Policy',
-                    style:
-                        TextStyle(fontSize: bodySize, color: Colors.grey[800])),
-              ),
-            ],
-          );
+  Widget _buildMobileFooter(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Logo and tagline
+        const Text(
+          'The Union Shop',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'University of Portsmouth Students\' Union',
+          style: TextStyle(
+            color: Colors.grey[400],
+            fontSize: 12,
+          ),
+        ),
+        const SizedBox(height: 16),
 
-          Widget latestOffers = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Latest Offers',
+        // Search Bar
+        InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => const SearchOverlay(),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.grey[700]!),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.search, color: Colors.grey[400], size: 18),
+                const SizedBox(width: 8),
+                Text(
+                  'Search products...',
                   style: TextStyle(
-                      fontSize: headingSize, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 12),
-              Row(
+                    color: Colors.grey[400],
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Quick Links
+        const Text(
+          'Quick Links',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        _buildFooterLink(context, 'Home', '/'),
+        _buildFooterLink(context, 'Collections', '/collections'),
+        _buildFooterLink(context, 'About', '/about'),
+        const SizedBox(height: 16),
+
+        // Contact
+        const Text(
+          'Contact',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Email: shop@upsu.net',
+          style: TextStyle(
+            color: Colors.grey[400],
+            fontSize: 12,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Phone: 023 9284 3000',
+          style: TextStyle(
+            color: Colors.grey[400],
+            fontSize: 12,
+          ),
+        ),
+        const SizedBox(height: 16),
+
+        // Copyright
+        Center(
+          child: Text(
+            '© 2024 University of Portsmouth Students\' Union',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 10,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDesktopFooter(BuildContext context, bool isTablet) {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // About Section
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Container(
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        'Email address',
-                        style: TextStyle(color: Colors.grey),
-                      ),
+                  const Text(
+                    'The Union Shop',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    height: 44,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Subscribed (static)')),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: accent,
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
+                  const SizedBox(height: 12),
+                  Text(
+                    'University of Portsmouth Students\' Union official merchandise store.',
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Search Bar
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const SearchOverlay(),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[800],
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: Colors.grey[700]!),
                       ),
-                      child: const Text('SUBSCRIBE'),
+                      child: Row(
+                        children: [
+                          Icon(Icons.search, color: Colors.grey[400], size: 20),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Search products...',
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ],
-          );
+            ),
+            const SizedBox(width: 40),
 
-          Widget content;
-          if (isWide) {
-            content = Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(flex: 4, child: openingHours),
-                const SizedBox(width: 40),
-                Expanded(flex: 3, child: helpInfo),
-                const SizedBox(width: 40),
-                Expanded(flex: 4, child: latestOffers),
-              ],
-            );
-          } else {
-            content = Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                openingHours,
-                const SizedBox(height: 24),
-                helpInfo,
-                const SizedBox(height: 24),
-                latestOffers,
-              ],
-            );
-          }
+            // Quick Links
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Quick Links',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildFooterLink(context, 'Home', '/'),
+                  _buildFooterLink(context, 'Collections', '/collections'),
+                  _buildFooterLink(context, 'About', '/about'),
+                  _buildFooterLink(context, 'Cart', '/cart'),
+                ],
+              ),
+            ),
+            const SizedBox(width: 40),
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              content,
-            ],
-          );
-        },
+            // Contact
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Contact Us',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Email: shop@upsu.net',
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Phone: 023 9284 3000',
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Cambridge Road, Portsmouth',
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Divider(color: Colors.grey[700]),
+        const SizedBox(height: 16),
+        Text(
+          '© 2024 University of Portsmouth Students\' Union. All rights reserved.',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 12,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFooterLink(BuildContext context, String text, String route) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6.0),
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, route),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.grey[400],
+            fontSize: 12,
+            decoration: TextDecoration.none,
+          ),
+        ),
       ),
     );
   }
