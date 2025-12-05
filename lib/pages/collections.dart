@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
+import '../widgets/mobile_drawer.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -11,6 +12,7 @@ class CollectionsPage extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Scaffold(
+      endDrawer: const MobileDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
