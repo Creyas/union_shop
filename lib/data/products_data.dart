@@ -2,6 +2,7 @@ class Product {
   final String id;
   final String title;
   final String price;
+  final String? discountPrice; // Add this line
   final String defaultImageUrl;
   final Map<String, String> colorImages;
   final bool hasSize;
@@ -12,6 +13,7 @@ class Product {
     required this.id,
     required this.title,
     required this.price,
+    this.discountPrice, // Add this line
     required this.defaultImageUrl,
     required this.colorImages,
     this.hasSize = true,
