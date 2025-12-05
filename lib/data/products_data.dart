@@ -6,6 +6,7 @@ class Product {
   final Map<String, String> colorImages;
   final bool hasSize;
   final String description;
+  final double? discountPercentage;
 
   Product({
     required this.id,
@@ -15,7 +16,20 @@ class Product {
     required this.colorImages,
     this.hasSize = true,
     required this.description,
+    this.discountPercentage,
   });
+
+  // Get discounted price
+  String get discountedPrice {
+    if (discountPercentage == null || discountPercentage == 0) {
+      return price;
+    }
+    final priceValue = double.parse(price.replaceAll('£', ''));
+    final discounted = priceValue * (1 - discountPercentage! / 100);
+    return '£${discounted.toStringAsFixed(2)}';
+  }
+
+  bool get hasDiscount => discountPercentage != null && discountPercentage! > 0;
 }
 
 class ProductsData {
@@ -94,7 +108,7 @@ class ProductsData {
           'Durable and spacious backpack perfect for carrying textbooks, laptops, and essentials. Features multiple compartments and padded straps.',
     ),
 
-    // Beer Pong
+    // Beer Pong - FRESHERS SALE 25% OFF
     Product(
       id: 'beerpong',
       title: 'Beer Pong Set',
@@ -106,6 +120,7 @@ class ProductsData {
       hasSize: false,
       description:
           'Complete beer pong set including cups and balls. Perfect for student parties and social events.',
+      discountPercentage: 25.0,
     ),
 
     // Calculator
@@ -122,7 +137,7 @@ class ProductsData {
           'Essential scientific calculator for all your academic needs. Features multiple functions and a clear display.',
     ),
 
-    // Dart Set
+    // Dart Set - FRESHERS SALE 25% OFF
     Product(
       id: 'dartset',
       title: 'Dart Set',
@@ -134,9 +149,10 @@ class ProductsData {
       hasSize: false,
       description:
           'Professional dart set perfect for recreation room fun. Includes multiple darts with different designs.',
+      discountPercentage: 25.0,
     ),
 
-    // Football
+    // Football - FRESHERS SALE 25% OFF
     Product(
       id: 'football',
       title: 'University Football',
@@ -148,6 +164,7 @@ class ProductsData {
       hasSize: false,
       description:
           'Official University of Portsmouth football. Perfect for intramural sports and recreational play.',
+      discountPercentage: 25.0,
     ),
   ];
 
