@@ -19,7 +19,7 @@ import 'pages/profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -28,7 +28,7 @@ void main() async {
   } catch (e) {
     print('⚠️ Firebase initialization error: $e');
   }
-  
+
   runApp(const UnionShopApp());
 }
 
