@@ -63,7 +63,7 @@ class CollectionsPage extends StatelessWidget {
                         description: 'T-Shirts & Hoodies',
                         imageUrl: 'assets/images/white_hoodie1.jpg',
                         category: 'clothes',
-                        itemCount: _getClothesProducts().length,
+                        itemCount: getClothesProducts().length,
                       ),
                       _buildCollectionCategory(
                         context,
@@ -71,7 +71,7 @@ class CollectionsPage extends StatelessWidget {
                         description: 'Accessories & More',
                         imageUrl: 'assets/images/backpack.jpg',
                         category: 'merchandise',
-                        itemCount: _getMerchandiseProducts().length,
+                        itemCount: getMerchandiseProducts().length,
                       ),
                       _buildCollectionCategory(
                         context,
@@ -79,7 +79,7 @@ class CollectionsPage extends StatelessWidget {
                         description: 'Special Offers',
                         imageUrl: 'assets/images/white_shirt1.jpg',
                         category: 'freshers',
-                        itemCount: _getFreshersSaleProducts().length,
+                        itemCount: getFreshersSaleProducts().length,
                       ),
                     ],
                   );
