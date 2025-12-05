@@ -179,10 +179,7 @@ class _SearchOverlayState extends State<SearchOverlay> {
         context,
         '/product',
         arguments: {
-          'id': product.id,
-          'title': product.title,
-          'price': product.price,
-          'imageUrl': product.defaultImageUrl,
+          'product': product, // Pass the whole product object
         },
       );
     }
