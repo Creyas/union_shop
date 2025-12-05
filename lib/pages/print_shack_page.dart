@@ -429,3 +429,78 @@ class _PrintShackPageState extends State<PrintShackPage> {
           const SizedBox(height: 16),
         ],
 
+        // Quantity
+        const Text(
+          'Quantity',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.remove),
+              onPressed: () {
+                if (quantity > 1) {
+                  setState(() {
+                    quantity--;
+                  });
+                }
+              },
+              style: IconButton.styleFrom(
+                side: BorderSide(color: Colors.grey[300]!),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                '$quantity',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                setState(() {
+                  quantity++;
+                });
+              },
+              style: IconButton.styleFrom(
+                side: BorderSide(color: Colors.grey[300]!),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+
+        // Add to Cart Button
+        SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton(
+            onPressed: () => addToCart(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4d2963),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text(
+              'ADD TO CART',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+
+    
