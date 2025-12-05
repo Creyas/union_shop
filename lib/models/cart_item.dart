@@ -4,8 +4,8 @@ class CartItem {
   final double price;
   final String color;
   final String size;
-  int quantity;
-  final String? imageUrl;
+  final int quantity;
+  final String imageUrl;
 
   CartItem({
     required this.id,
@@ -14,20 +14,28 @@ class CartItem {
     required this.color,
     required this.size,
     required this.quantity,
-    this.imageUrl,
+    required this.imageUrl,
   });
 
   double get total => price * quantity;
 
-  CartItem copyWith({int? quantity}) {
+  CartItem copyWith({
+    String? id,
+    String? name,
+    double? price,
+    String? color,
+    String? size,
+    int? quantity,
+    String? imageUrl,
+  }) {
     return CartItem(
-      id: id,
-      name: name,
-      price: price,
-      color: color,
-      size: size,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      color: color ?? this.color,
+      size: size ?? this.size,
       quantity: quantity ?? this.quantity,
-      imageUrl: imageUrl,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }
