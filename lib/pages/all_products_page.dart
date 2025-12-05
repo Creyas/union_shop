@@ -4,6 +4,7 @@ import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
 import '../main.dart'; // Import ProductCard from main.dart
 import '../widgets/mobile_drawer.dart';
+import '../widgets/product_card.dart'; // NEW - Import from widgets
 
 class AllProductsPage extends StatefulWidget {
   const AllProductsPage({super.key});

@@ -5,6 +5,7 @@ import '../widgets/footer_widget.dart';
 import '../providers/cart_provider.dart';
 import '../models/cart_item.dart';
 import '../widgets/mobile_drawer.dart';
+import '../widgets/product_card.dart'; // NEW - Import from widgets
 
 class PrintShackPage extends StatefulWidget {
   const PrintShackPage({super.key});
