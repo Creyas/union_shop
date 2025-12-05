@@ -13,9 +13,21 @@ import 'dart:async';
 import 'widgets/header_widget.dart';
 import 'widgets/footer_widget.dart';
 import 'data/products_data.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(const UnionShopApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return UnionShopApp();
+  }
 }
 
 class UnionShopApp extends StatelessWidget {

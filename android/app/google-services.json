@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588555793266",
+    "project_id": "union-shop-63006",
+    "storage_bucket": "union-shop-63006.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588555793266:android:dd7494915a4d2f9ff5a3eb",
+        "android_client_info": {
+          "package_name": "com.example.union_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbW8nXNZvEjE_waELINcKxrew2W2VZni8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
