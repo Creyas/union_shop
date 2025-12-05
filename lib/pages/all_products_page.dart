@@ -3,6 +3,7 @@ import '../widgets/header_widget.dart';
 import '../widgets/footer_widget.dart';
 import '../data/products_data.dart';
 import '../main.dart';
+import '../widgets/mobile_drawer.dart';
 
 class AllProductsPage extends StatefulWidget {
   const AllProductsPage({super.key});
@@ -121,6 +122,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
     final isTablet = MediaQuery.of(context).size.width < 900;
 
     return Scaffold(
+      endDrawer: const MobileDrawer(),
       body: SingleChildScrollView(
         child: Column(
           children: [
